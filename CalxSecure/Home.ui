@@ -1,0 +1,428 @@
+<UI version="4.0">
+	<class>HomeClass</class>
+	<widget class="QWidget" name="HomeClass">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>1280</width>
+				<height>820</height>
+			</rect>
+		</property>
+		<property name="windowTitle">
+			<string>Home - CalxSecure</string>
+		</property>
+		<property name="styleSheet">
+			<string notr="true">
+				QWidget#HomeClass {
+				background-color: #0f0f12;
+				}
+				QFrame#topDock {
+				background-color: #1a1a1f;
+				border-bottom: 1px solid #333333;
+				}
+				QPushButton {
+				font-size: 15px;
+				font-weight: 600;
+				padding: 12px 28px;
+				border: none;
+				border-radius: 10px;
+				color: #e0e0e0;
+				background-color: transparent;
+				}
+				QPushButton:hover {
+				background-color: #ffffff;
+				color: #000000;
+				}
+				QPushButton:pressed {
+				background-color: #cccccc;
+				}
+				QLabel#title {
+				font-size: 48px;
+				font-weight: 800;
+				color: #ffffff;
+				}
+				QLabel#subtitle {
+				font-size: 20px;
+				color: #aaaaaa;
+				}
+				QFrame#securityCard {
+				background-color: #1a1a1f;
+				border: 1px solid #333333;
+				border-radius: 16px;
+				padding: 32px;
+				}
+				QLabel#cardTitle {
+				font-size: 20px;
+				font-weight: 700;
+				color: #ffffff;
+				}
+				QLabel#cardDesc {
+				color: #aaaaaa;
+				}
+			</string>
+		</property>
+
+		<layout class="QVBoxLayout" name="verticalLayout">
+			<property name="spacing">
+				<number>0</number>
+			</property>
+			<property name="leftMargin">
+				<number>0</number>
+			</property>
+			<property name="topMargin">
+				<number>0</number>
+			</property>
+			<property name="rightMargin">
+				<number>0</number>
+			</property>
+			<property name="bottomMargin">
+				<number>0</number>
+			</property>
+
+			<!-- TOP DOCK NAVIGATION -->
+			<item>
+				<widget class="QFrame" name="topDock">
+					<property name="minimumHeight">
+						<number>80</number>
+					</property>
+					<property name="maximumHeight">
+						<number>80</number>
+					</property>
+					<layout class="QHBoxLayout" name="dockLayout">
+						<property name="spacing">
+							<number>12</number>
+						</property>
+						<property name="leftMargin">
+							<number>40</number>
+						</property>
+						<property name="rightMargin">
+							<number>40</number>
+						</property>
+
+						<item>
+							<spacer name="leftSpacer">
+								<property name="orientation">
+									<enum>Qt::Horizontal</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>40</width>
+										<height>20</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+
+						<item>
+							<widget class="QPushButton" name="btnHome">
+								<property name="text">
+									<string>Home</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="btnTransfer">
+								<property name="text">
+									<string>P2P Transfer</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="btnBills">
+								<property name="text">
+									<string>Bills</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="btnRecharge">
+								<property name="text">
+									<string>Recharge</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="btnRewards">
+								<property name="text">
+									<string>Rewards</string>
+								</property>
+							</widget>
+						</item>
+
+						<item>
+							<spacer name="rightSpacer">
+								<property name="orientation">
+									<enum>Qt::Horizontal</enum>
+								</property>
+								<property name="sizeHint" stdset="0">
+									<size>
+										<width>40</width>
+										<height>20</height>
+									</size>
+								</property>
+							</spacer>
+						</item>
+					</layout>
+				</widget>
+			</item>
+
+			<!-- SCROLLABLE CONTENT -->
+			<item>
+				<widget class="QScrollArea" name="scrollArea">
+					<property name="widgetResizable">
+						<bool>true</bool>
+					</property>
+					<property name="frameShape">
+						<enum>QFrame::NoFrame</enum>
+					</property>
+					<property name="horizontalScrollBarPolicy">
+						<enum>Qt::ScrollBarAlwaysOff</enum>
+					</property>
+
+					<widget class="QWidget" name="scrollContent">
+						<property name="geometry">
+							<rect>
+								<x>0</x>
+								<y>0</y>
+								<width>1260</width>
+								<height>900</height>
+							</rect>
+						</property>
+
+						<layout class="QVBoxLayout" name="contentLayout">
+							<property name="spacing">
+								<number>60</number>
+							</property>
+							<property name="leftMargin">
+								<number>80</number>
+							</property>
+							<property name="topMargin">
+								<number>60</number>
+							</property>
+							<property name="rightMargin">
+								<number>80</number>
+							</property>
+							<property name="bottomMargin">
+								<number>80</number>
+							</property>
+
+							<!-- HERO SECTION -->
+							<item alignment="Qt::AlignHCenter">
+								<widget class="QWidget" name="heroWidget" native="true">
+									<layout class="QVBoxLayout" name="heroLayout">
+										<property name="spacing">
+											<number>24</number>
+										</property>
+										<item alignment="Qt::AlignHCenter">
+											<widget class="QLabel" name="lblTitle">
+												<property name="text">
+													<string>Send, Spend, Grow — with confidence</string>
+												</property>
+												<property name="alignment">
+													<set>Qt::AlignCenter</set>
+												</property>
+												<property name="objectName">
+													<string>title</string>
+												</property>
+											</widget>
+										</item>
+										<item alignment="Qt::AlignHCenter">
+											<widget class="QLabel" name="lblSubtitle">
+												<property name="text">
+													<string>The secure, fast and private payment gateway trusted by millions</string>
+												</property>
+												<property name="alignment">
+													<set>Qt::AlignCenter</set>
+												</property>
+												<property name="styleSheet">
+													<string notr="true">font-size: 20px; color: #aaaaaa;</string>
+												</property>
+											</widget>
+										</item>
+										<item alignment="Qt::AlignHCenter">
+											<widget class="QPushButton" name="btnGetStarted">
+												<property name="text">
+													<string>Get Started Securely</string>
+												</property>
+												<property name="minimumWidth">
+													<number>280</number>
+												</property>
+												<property name="minimumHeight">
+													<number>56</number>
+												</property>
+												<property name="styleSheet">
+													<string notr="true">
+														QPushButton {
+														background-color: #ffffff;
+														color: #000000;
+														font-weight: 700;
+														border-radius: 14px;
+														font-size: 16px;
+														}
+														QPushButton:hover {
+														background-color: #e0e0e0;
+														}
+													</string>
+												</property>
+											</widget>
+										</item>
+									</layout>
+								</widget>
+							</item>
+
+							<!-- SECURITY SECTION -->
+							<item>
+								<widget class="QLabel" name="lblSecurityTitle">
+									<property name="text">
+										<string>Bank-Grade Security</string>
+									</property>
+									<property name="styleSheet">
+										<string notr="true">font-size: 28px; font-weight: 700; color: #ffffff;</string>
+									</property>
+									<property name="alignment">
+										<set>Qt::AlignCenter</set>
+									</property>
+								</widget>
+							</item>
+
+							<item>
+								<layout class="QHBoxLayout" name="securityCardsLayout">
+									<property name="spacing">
+										<number>24</number>
+									</property>
+
+									<!-- Card 1 -->
+									<item>
+										<widget class="QFrame" name="cardEncryption">
+											<property name="objectName">
+												<string>securityCard</string>
+											</property>
+											<layout class="QVBoxLayout">
+												<item>
+													<widget class="QLabel" name="lblEncTitle">
+														<property name="text">
+															<string>AES-256 Encryption</string>
+														</property>
+														<property name="objectName">
+															<string>cardTitle</string>
+														</property>
+													</widget>
+												</item>
+												<item>
+													<widget class="QLabel" name="lblEncDesc">
+														<property name="text">
+															<string>End-to-end encryption for every transaction</string>
+														</property>
+														<property name="wordWrap">
+															<bool>true</bool>
+														</property>
+														<property name="objectName">
+															<string>cardDesc</string>
+														</property>
+													</widget>
+												</item>
+											</layout>
+										</widget>
+									</item>
+
+									<!-- Card 2 -->
+									<item>
+										<widget class="QFrame" name="cardFraud">
+											<property name="objectName">
+												<string>securityCard</string>
+											</property>
+											<layout class="QVBoxLayout">
+												<item>
+													<widget class="QLabel" name="lblFraudTitle">
+														<property name="text">
+															<string>AI Fraud Detection</string>
+														</property>
+														<property name="objectName">
+															<string>cardTitle</string>
+														</property>
+													</widget>
+												</item>
+												<item>
+													<widget class="QLabel" name="lblFraudDesc">
+														<property name="text">
+															<string>Real-time risk scoring and anomaly protection</string>
+														</property>
+														<property name="wordWrap">
+															<bool>true</bool>
+														</property>
+														<property name="objectName">
+															<string>cardDesc</string>
+														</property>
+													</widget>
+												</item>
+											</layout>
+										</widget>
+									</item>
+
+									<!-- Card 3 -->
+									<item>
+										<widget class="QFrame" name="cardMFA">
+											<property name="objectName">
+												<string>securityCard</string>
+											</property>
+											<layout class="QVBoxLayout">
+												<item>
+													<widget class="QLabel" name="lblMFATitle">
+														<property name="text">
+															<string>Multi-Factor Authentication</string>
+														</property>
+														<property name="objectName">
+															<string>cardTitle</string>
+														</property>
+													</widget>
+												</item>
+												<item>
+													<widget class="QLabel" name="lblMFADesc">
+														<property name="text">
+															<string>Device binding and biometric security</string>
+														</property>
+														<property name="wordWrap">
+															<bool>true</bool>
+														</property>
+														<property name="objectName">
+															<string>cardDesc</string>
+														</property>
+													</widget>
+												</item>
+											</layout>
+										</widget>
+									</item>
+								</layout>
+							</item>
+
+							<!-- TEAM SECTION -->
+							<item alignment="Qt::AlignHCenter">
+								<widget class="QLabel" name="lblTeam">
+									<property name="text">
+										<string>Built by Visionaries</string>
+									</property>
+									<property name="styleSheet">
+										<string notr="true">font-size: 26px; font-weight: 700; color: #ffffff;</string>
+									</property>
+								</widget>
+							</item>
+
+							<item>
+								<layout class="QHBoxLayout" name="teamLayout">
+									<property name="spacing">
+										<number>20</number>
+									</property>
+									<!-- Team cards can be added here if needed -->
+								</layout>
+							</item>
+
+						</layout>
+					</widget>
+				</widget>
+			</item>
+		</layout>
+	</widget>
+	<resources/>
+	<connections/>
+</UI>

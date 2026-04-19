@@ -1,0 +1,250 @@
+<UI version="4.0">
+	<class>LoginDialogClass</class>
+	<widget class="QWidget" name="LoginDialogClass">
+		<property name="objectName">
+			<string notr="true">LoginDialogClass</string>
+		</property>
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>460</width>
+				<height>560</height>
+			</rect>
+		</property>
+		<property name="windowTitle">
+			<string>CalxSecure - Login</string>
+		</property>
+		<property name="styleSheet">
+			<string notr="true">
+				QWidget#LoginDialogClass {
+				background-color: #0f0f12;
+				}
+				QFrame#card {
+				background-color: #1a1a1f;
+				border: 1px solid #333333;
+				border-radius: 20px;
+				}
+				QLabel {
+				color: #e0e0e0;
+				}
+				QLabel#title {
+				font-size: 28px;
+				font-weight: 800;
+				color: #ffffff;
+				}
+				QLabel#subtitle {
+				font-size: 15px;
+				color: #aaaaaa;
+				}
+				QLineEdit, QComboBox {
+				background-color: #111114;
+				border: 1px solid #444444;
+				border-radius: 10px;
+				padding: 14px 16px;
+				color: #ffffff;
+				font-size: 15px;
+				}
+				QLineEdit:focus, QComboBox:focus {
+				border: 1px solid #ffffff;
+				}
+				QPushButton {
+				background-color: #ffffff;
+				color: #000000;
+				font-weight: 700;
+				border-radius: 10px;
+				padding: 16px;
+				font-size: 16px;
+				}
+				QPushButton:hover {
+				background-color: #e5e5e5;
+				}
+				QPushButton:pressed {
+				background-color: #cccccc;
+				}
+				QLabel#toggleLabel {
+				color: #888888;
+				font-size: 14px;
+				}
+			</string>
+		</property>
+
+		<layout class="QVBoxLayout" name="mainLayout">
+			<property name="spacing">
+				<number>0</number>
+			</property>
+			<property name="leftMargin">
+				<number>0</number>
+			</property>
+			<property name="topMargin">
+				<number>0</number>
+			</property>
+			<property name="rightMargin">
+				<number>0</number>
+			</property>
+			<property name="bottomMargin">
+				<number>0</number>
+			</property>
+
+			<item>
+				<spacer name="topSpacer">
+					<property name="orientation">
+						<enum>Qt::Vertical</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>40</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+
+			<!-- Professional Centered Card -->
+			<item alignment="Qt::AlignHCenter">
+				<widget class="QFrame" name="card">
+					<property name="minimumWidth">
+						<number>420</number>
+					</property>
+					<property name="maximumWidth">
+						<number>420</number>
+					</property>
+					<layout class="QVBoxLayout" name="cardLayout">
+						<property name="spacing">
+							<number>28</number>
+						</property>
+						<property name="leftMargin">
+							<number>40</number>
+						</property>
+						<property name="topMargin">
+							<number>50</number>
+						</property>
+						<property name="rightMargin">
+							<number>40</number>
+						</property>
+						<property name="bottomMargin">
+							<number>50</number>
+						</property>
+
+						<!-- Title -->
+						<item alignment="Qt::AlignHCenter">
+							<widget class="QLabel" name="title">
+								<property name="text">
+									<string>Welcome Back</string>
+								</property>
+								<property name="objectName">
+									<string>title</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignCenter</set>
+								</property>
+							</widget>
+						</item>
+
+						<!-- Subtitle -->
+						<item alignment="Qt::AlignHCenter">
+							<widget class="QLabel" name="subtitle">
+								<property name="text">
+									<string>Sign in to access your secure account</string>
+								</property>
+								<property name="objectName">
+									<string>subtitle</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignCenter</set>
+								</property>
+							</widget>
+						</item>
+
+						<!-- Email -->
+						<item>
+							<widget class="QLineEdit" name="leEmail">
+								<property name="placeholderText">
+									<string>Email Address</string>
+								</property>
+							</widget>
+						</item>
+
+						<!-- Password -->
+						<item>
+							<widget class="QLineEdit" name="lePassword">
+								<property name="echoMode">
+									<enum>QLineEdit::Password</enum>
+								</property>
+								<property name="placeholderText">
+									<string>Password</string>
+								</property>
+							</widget>
+						</item>
+
+						<!-- Role -->
+						<item>
+							<widget class="QComboBox" name="cbRole">
+								<item>
+									<property name="text">
+										<string>User</string>
+									</property>
+								</item>
+								<item>
+									<property name="text">
+										<string>Merchant</string>
+									</property>
+								</item>
+								<item>
+									<property name="text">
+										<string>Admin</string>
+									</property>
+								</item>
+							</widget>
+						</item>
+
+						<!-- Login Button -->
+						<item>
+							<widget class="QPushButton" name="btnSubmit">
+								<property name="text">
+									<string>Sign In</string>
+								</property>
+								<property name="minimumHeight">
+									<number>56</number>
+								</property>
+							</widget>
+						</item>
+
+						<!-- Toggle between Login and Signup -->
+						<item alignment="Qt::AlignHCenter">
+							<widget class="QLabel" name="lblToggle">
+								<property name="text">
+									<string>Don't have an account? &lt;a href=&quot;#&quot; style=&quot;color:#ffffff;&quot;&gt;Sign Up&lt;/a&gt;</string>
+								</property>
+								<property name="objectName">
+									<string>toggleLabel</string>
+								</property>
+								<property name="alignment">
+									<set>Qt::AlignCenter</set>
+								</property>
+							</widget>
+						</item>
+
+					</layout>
+				</widget>
+			</item>
+
+			<item>
+				<spacer name="bottomSpacer">
+					<property name="orientation">
+						<enum>Qt::Vertical</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>40</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+		</layout>
+	</widget>
+	<layoutDefault spacing="6" margin="11"/>
+	<pixmapfunction></pixmapfunction>
+	<connections/>
+</UI>
