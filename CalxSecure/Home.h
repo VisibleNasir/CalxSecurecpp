@@ -1,21 +1,24 @@
 #pragma once
 
 #include <QWidget>
+
 #include "ui_Home.h"
 
 class Home : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	explicit Home(QWidget *parent = nullptr);
-	~Home();
-	void updateBalanceDisplay();
-
+    Home(QWidget* parent = nullptr);
+    ~Home();
+    void onGetStartedClicked();
 signals:
-	void viewDashboardRequested(); 
+    void viewDashboardRequested();
+    void loginRequested();
+
+
 
 private:
-	Ui::HomeClass ui;
-};
+    Ui::HomeClass ui;
 
+};

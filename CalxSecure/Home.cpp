@@ -1,4 +1,7 @@
-#include "Home.h"
+﻿#include "Home.h"
+#include <QPropertyAnimation>
+#include <QEasingCurve>
+#include <QPushButton>
 #include "core/AppState.h"
 
 Home::Home(QWidget* parent)
@@ -6,10 +9,13 @@ Home::Home(QWidget* parent)
 {
     ui.setupUi(this);
 
-    // Clicking the main gradient button routes you to the dashboard
-    connect(ui.btnGetStarted, &QPushButton::clicked, this, &Home::viewDashboardRequested);
+    connect(ui.primaryBtn, &QPushButton::clicked,
+        this, &Home::viewDashboardRequested);
 }
 
-Home::~Home()
+Home::~Home() {}
+
+void Home::onGetStartedClicked()
 {
+    emit loginRequested();   // 🔥 trigger login flow
 }

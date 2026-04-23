@@ -1,23 +1,20 @@
 ﻿#include "GlobalStyle.h"
 #include <QApplication>
 #include <QPalette>
-#include <QStyleFactory>
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTimer>
+#include <QPropertyAnimation>
+#include <QEasingCurve>
+#include <QGraphicsBlurEffect>
+
 #include "AppController.h"
 #include "Home.h"
 #include "DashboardPage.h"
 #include "P2PPage.h"
-// Add more pages as you create them
-// #include "BillsPage.h"
-// #include "RechargePage.h"
-// #include "RewardsPage.h"
-
-#include "components/NavBar.h"
-#include "components/DockWidget.h"
 #include "LoginDialog.h"
+#include "core/AppState.h"
 
 AppController::AppController(QWidget* parent) : QMainWindow(parent)
 {
@@ -31,17 +28,16 @@ AppController::AppController(QWidget* parent) : QMainWindow(parent)
 
     if (!DatabaseManager::instance().connect()) {
         QMessageBox::critical(this, "Fatal Error",
-            "Cannot connect to database.\nPlease check PostgreSQL is running and schema is applied.");
+            "Cannot connect to database.\nCheck PostgreSQL.");
         qApp->quit();
         return;
     }
 
     switchTheme(true);
 
-    // Show login first
-    QTimer::singleShot(300, this, &AppController::showLoginDialog);
+    // Show login after UI loads
+    QTimer::singleShot(200, this, &AppController::showLoginDialog);
 }
-
 void AppController::setupUI()
 {
     stackedWidget = new QStackedWidget(this);
@@ -50,65 +46,175 @@ void AppController::setupUI()
     m_dashboardPage = new DashboardPage(this);
     m_p2pPage = new P2PPage(this);
 
-    stackedWidget->addWidget(m_homePage);      // Index 0
-    stackedWidget->addWidget(m_dashboardPage); // Index 1
-    stackedWidget->addWidget(m_p2pPage);       // Index 2
-
-    // Add more pages here later
-    // stackedWidget->addWidget(m_billsPage);     // Index 3
-    // stackedWidget->addWidget(m_rechargePage);  // Index 4
-    // stackedWidget->addWidget(m_rewardsPage);   // Index 5
+    stackedWidget->addWidget(m_homePage);      // 0
+    stackedWidget->addWidget(m_dashboardPage); // 1
+    stackedWidget->addWidget(m_p2pPage);       // 2
 }
-
 void AppController::setupNavigation()
 {
-    m_dock = new DockWidget(stackedWidget, this);
-    m_navBar = new NavBar(stackedWidget, this);
+    QWidget* root = new QWidget(this);
+    QHBoxLayout* mainLayout = new QHBoxLayout(root);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    QWidget* mainContainer = new QWidget();
-    QHBoxLayout* hLayout = new QHBoxLayout(mainContainer);
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->addWidget(m_dock);
-    hLayout->addWidget(stackedWidget, 1);
+    // ===== SIDEBAR =====
+    QFrame* sidebar = new QFrame();
+    sidebar->setObjectName("sidebar");
+    sidebar->setMinimumWidth(80); // Increased resting width
+    sidebar->setMaximumWidth(280); // Increased expanded width
 
-    QVBoxLayout* mainVertical = new QVBoxLayout();
-    mainVertical->addWidget(m_navBar);
-    mainVertical->addWidget(mainContainer);
+    QVBoxLayout* sideLayout = new QVBoxLayout(sidebar);
 
-    QWidget* root = new QWidget();
-    root->setLayout(mainVertical);
+    QPushButton* btnToggle = new QPushButton("≡");
+    QPushButton* btnHome = new QPushButton("Home");
+    QPushButton* btnDashboard = new QPushButton("Dashboard");
+    QPushButton* btnP2P = new QPushButton("Payments");
+
+    sideLayout->addWidget(btnToggle);
+    sideLayout->addWidget(btnHome);
+    sideLayout->addWidget(btnDashboard);
+    sideLayout->addWidget(btnP2P);
+    sideLayout->addStretch();
+
+    // ===== CONTENT =====
+    QWidget* content = new QWidget();
+    QVBoxLayout* contentLayout = new QVBoxLayout(content);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
+    contentLayout->addWidget(stackedWidget);
+
+    mainLayout->addWidget(sidebar);
+    mainLayout->addWidget(content, 1);
+
     setCentralWidget(root);
 
-    // Connections
-    connect(m_dock, &DockWidget::pageRequested, stackedWidget, &QStackedWidget::setCurrentIndex);
-    connect(m_navBar, &NavBar::homeRequested, this, [this]() { stackedWidget->setCurrentIndex(0); });
+    // ===== NAVIGATION =====
+    connect(btnHome, &QPushButton::clicked, this, [this]() {
+        stackedWidget->setCurrentIndex(0);
+        });
 
-    // Connect from Home page buttons
-    connect(m_homePage, &Home::viewDashboardRequested, this, [this]() { stackedWidget->setCurrentIndex(1); }); // Dashboard
-    // Add more connections as needed
+    connect(btnDashboard, &QPushButton::clicked, this, [this]() {
+        if (!AppState::instance().isLoggedIn()) {
+            showLoginDialog();
+            return;
+        }
+        stackedWidget->setCurrentIndex(1);
+        });
+
+    connect(btnP2P, &QPushButton::clicked, this, [this]() {
+        if (!AppState::instance().isLoggedIn()) {
+            showLoginDialog();
+            return;
+        }
+        stackedWidget->setCurrentIndex(2);
+        });
+
+    // ===== SIDEBAR ANIMATION =====
+    bool isCollapsed = false;
+
+    connect(btnToggle, &QPushButton::clicked, this, [=]() mutable {
+
+        QPropertyAnimation* anim = new QPropertyAnimation(sidebar, "maximumWidth");
+        anim->setDuration(220);
+        anim->setEasingCurve(QEasingCurve::InOutCubic);
+
+        if (isCollapsed) {
+            anim->setEndValue(280); // Match new max width
+            btnHome->setText("Home");
+            btnDashboard->setText("Dashboard");
+            btnP2P->setText("Payments");
+        }
+        else {
+            anim->setEndValue(80); // Match new min width
+            btnHome->setText("");
+            btnDashboard->setText("");
+            btnP2P->setText("");
+        }
+
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
+        isCollapsed = !isCollapsed;
+        });
+
+    // ===== HOME CTA → LOGIN =====
+    connect(m_homePage, &Home::loginRequested,
+        this, &AppController::showLoginDialog);
 }
-
 void AppController::showLoginDialog()
 {
+    // Apply blur effect to background
+    QGraphicsBlurEffect* blurEffect = new QGraphicsBlurEffect(this);
+    blurEffect->setBlurRadius(15);
+    stackedWidget->setGraphicsEffect(blurEffect);
+
     LoginDialog* dialog = new LoginDialog(this);
+    dialog->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    dialog->setWindowModality(Qt::ApplicationModal);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+
+    // Remove blur when dialog is removed
+    connect(dialog, &QObject::destroyed, this, [this]() {
+        stackedWidget->setGraphicsEffect(nullptr);
+        });
+
+    // Handle Login
     connect(dialog, &LoginDialog::loginRequested, this,
-        [this](const QString& email, const QString& pass, const QString& role) {
+        [this, dialog](const QString& email, const QString& pass, const QString& role) {
+
             if (authManager->login(email, pass, role)) {
-                // Update dashboard with user info
-                auto& session = authManager->currentSession();
-                m_dashboardPage->updateBalance(session.balance, session.fullName);
-                stackedWidget->setCurrentIndex(1); // Go to Dashboard after login
+                auto& s = authManager->currentSession();
+                SessionData sessionData;
+                sessionData.userId = QString::number(s.userId);
+                sessionData.fullName = s.fullName;
+                sessionData.email = s.email;
+                sessionData.balance = s.balance;
+
+                AppState::instance().setSession(sessionData);
+                m_dashboardPage->updateBalance(s.balance, s.fullName);
+
+                stackedWidget->setCurrentIndex(1); // Go to Dashboard
+                dialog->close();
             }
             else {
-                QMessageBox::warning(this, "Login Failed", "Invalid credentials");
+                QMessageBox::warning(dialog, "Login Failed", "Invalid credentials");
             }
         });
-    //dialog->exec();
+
+    // Handle Signup
+    connect(authManager, &AuthManager::signupFailed, dialog, [dialog](const QString& message) {
+        QMessageBox::warning(dialog, "Signup Failed", "Database Error:\n" + message);
+    });
+
+    connect(dialog, &LoginDialog::signupRequested, this,
+        [this, dialog](const QString& username, const QString& email, const QString& pass, const QString& fullName, const QString& phone) {
+            
+            QString defaultRole = "user"; // Standard user role
+            
+            // Step 1: Attempt to create the user in DB
+            if (authManager->signup(username, email, pass, fullName, phone, defaultRole)) {
+                
+                // Step 2: Auto-login after successful creation
+                if (authManager->login(email, pass, defaultRole)) {
+                    auto& s = authManager->currentSession();
+                    SessionData sessionData;
+                    sessionData.userId = QString::number(s.userId);
+                    sessionData.fullName = s.fullName;
+                    sessionData.email = s.email;
+                    sessionData.balance = 0.0; // New accounts have 0 balance
+
+                    AppState::instance().setSession(sessionData);
+                    m_dashboardPage->updateBalance(0.0, s.fullName);
+                    
+                    stackedWidget->setCurrentIndex(1); // Go to Dashboard
+                    dialog->close();
+                } else {
+                    QMessageBox::warning(dialog, "Auto-Login Failed", "Account created, but automatic login failed.");
+                }
+            } 
+        });
+
+    dialog->show();
 }
 
 void AppController::switchTheme(bool dark)
 {
-    // Enforce strict global dark theme for the entire application
     QString globalStyle = R"(
         QWidget {
             background-color: #050505;
@@ -130,22 +236,19 @@ void AppController::switchTheme(bool dark)
             background-color: #2a2a35;
             border: 1px solid #5c5cff;
         }
-        QLineEdit, QDoubleSpinBox {
+        QLineEdit, QDoubleSpinBox, QComboBox {
             background-color: #0f0f12;
             color: #ffffff;
             border: 1px solid #2a2a35;
             border-radius: 8px;
             padding: 8px;
         }
-        QLineEdit:focus, QDoubleSpinBox:focus {
-            border: 1px solid #5c5cff;
-        }
         QScrollArea {
             border: none;
             background-color: transparent;
         }
     )";
-    
+
     qApp->setStyleSheet(globalStyle);
 
     QPalette palette;
