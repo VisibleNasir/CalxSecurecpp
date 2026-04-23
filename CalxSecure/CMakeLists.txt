@@ -69,6 +69,9 @@ set(PROJECT_SOURCES
     core/AppState.cpp
     services/ApiClient.h
     services/ApiClient.cpp
+    services/PaymentService.h
+    services/PaymentService.cpp
+
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

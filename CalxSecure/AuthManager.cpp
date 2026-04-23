@@ -203,11 +203,12 @@ bool AuthManager::isRegularUser() const { return m_currentSession.role == "user"
 
 bool AuthManager::storeSessionToken(int userId, const QString& token)
 {
-    //QDateTime expires = QDateTime::currentDateTime().addHours(24);
-    QDateTime expires = QDateTime::currentDateTime();
+    // Fix: Make the session valid for 24 hours, not 0 seconds
+    QDateTime expires = QDateTime::currentDateTime().addSecs(24 * 60 * 60); 
+    
     auto q = m_db.executeQuery(
         "INSERT INTO sessions (user_id, token, expires_at) VALUES (?, ?, ?)",
-        { userId, token, expires });
+        { userId, token, expires });    
     return q.numRowsAffected() > 0;
 }
 

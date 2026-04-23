@@ -1,6 +1,7 @@
 #include "LoginDialog.h"
 #include <QMessageBox>
 #include <QRegularExpression>
+#include <QDateTime>
 
 LoginDialog::LoginDialog(QWidget* parent)
     : QWidget(parent)
@@ -105,7 +106,12 @@ void LoginDialog::onSubmitClicked()
 
     // Proceed
     if (m_isSignup) {
-        emit signupRequested("defaultuser", email, password, "New User", "+91 0000000000");
+        // Generate a uniquely guaranteed username to prevent Postgres UNIQUE constraint errors
+        QString baseName = email.section('@', 0, 0);
+        QString uniqueSuffix = QString::number(QDateTime::currentMSecsSinceEpoch() % 100000);
+        QString username = baseName + uniqueSuffix; 
+        
+        emit signupRequested(username, email, password, "New User", "+91 0000000000");
     }
     else {
         QString role = ui.cbRole->currentText().toLower();

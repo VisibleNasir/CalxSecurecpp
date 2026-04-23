@@ -1,5 +1,6 @@
 <UI version="4.0">
 	<class>DashboardPageClass</class>
+
 	<widget class="QWidget" name="DashboardPageClass">
 		<property name="geometry">
 			<rect>
@@ -9,111 +10,287 @@
 				<height>820</height>
 			</rect>
 		</property>
+
 		<property name="styleSheet">
 			<string notr="true">
-				QWidget#DashboardPageClass { background-color: #0f0f12; }
-				QFrame#balanceCard {
-				background-color: #1a1a1f;
-				border: 1px solid #333333;
-				border-radius: 20px;
-				padding: 32px;
+
+				/* ================= BASE ================= */
+				QWidget#DashboardPageClass {
+				background-color: #09090b;
+				font-family: Inter, Segoe UI;
+				color: #fafafa;
 				}
-				QLabel#balanceAmount {
-				font-size: 42px;
-				font-weight: 800;
-				color: #00ff9d;
-				}
-				QFrame#infoCard {
-				background-color: #1a1a1f;
-				border: 1px solid #333333;
+
+				/* ================= CARDS ================= */
+				QFrame#card {
+				background-color: #111113;
+				border: 1px solid #27272a;
 				border-radius: 16px;
+				padding: 20px;
 				}
+
+				QFrame#cardSoft {
+				background-color: #0f0f11;
+				border: 1px solid #1f1f23;
+				border-radius: 14px;
+				padding: 20px;
+				}
+
+				/* ================= TEXT ================= */
+				QLabel#heading {
+				font-size: 26px;
+				font-weight: 600;
+				}
+
+				QLabel#subText {
+				font-size: 14px;
+				color: #a1a1aa;
+				}
+
+				QLabel#balanceText {
+				font-size: 40px;
+				font-weight: 700;
+				}
+
+				/* ================= BUTTONS ================= */
+				QPushButton {
+				background-color: #18181b;
+				border: 1px solid #27272a;
+				border-radius: 10px;
+				padding: 10px 16px;
+				}
+
+				QPushButton:hover {
+				background-color: #27272a;
+				}
+
+				QPushButton#primaryBtn {
+				background-color: #fafafa;
+				color: #09090b;
+				font-weight: 600;
+				}
+
+				QPushButton#primaryBtn:hover {
+				background-color: #e4e4e7;
+				}
+
+				/* ================= INPUT ================= */
+				QDoubleSpinBox, QComboBox {
+				background-color: #0f0f12;
+				border: 1px solid #2a2a35;
+				border-radius: 8px;
+				padding: 8px;
+				}
+
+				/* ================= LIST ================= */
+				QListWidget {
+				background-color: transparent;
+				border: none;
+				}
+
+				QListWidget::item {
+				padding: 12px;
+				border-bottom: 1px solid #1f1f23;
+				}
+
 			</string>
 		</property>
 
 		<layout class="QVBoxLayout">
 			<property name="spacing">
-				<number>40</number>
+				<number>24</number>
 			</property>
 			<property name="leftMargin">
-				<number>60</number>
-			</property>
-			<property name="topMargin">
 				<number>40</number>
 			</property>
+			<property name="topMargin">
+				<number>30</number>
+			</property>
 			<property name="rightMargin">
-				<number>60</number>
+				<number>40</number>
 			</property>
 
-			<!-- Header -->
+			<!-- HEADER -->
 			<item>
-				<widget class="QLabel">
-					<property name="text">
-						<string>Welcome back, </string>
-					</property>
-					<property name="styleSheet">
-						<string notr="true">font-size: 28px; font-weight: 700; color: #ffffff;</string>
-					</property>
-				</widget>
+				<layout class="QHBoxLayout">
+					<item>
+						<widget class="QLabel" name="lblHeading">
+							<property name="objectName">
+								<string>heading</string>
+							</property>
+							<property name="text">
+								<string>Dashboard</string>
+							</property>
+						</widget>
+					</item>
+
+					<item>
+						<spacer>
+							<property name="orientation">
+								<enum>Qt::Horizontal</enum>
+							</property>
+						</spacer>
+					</item>
+
+					<item>
+						<widget class="QLabel" name="lblUserName">
+							<property name="objectName">
+								<string>subText</string>
+							</property>
+							<property name="text">
+								<string>User</string>
+							</property>
+						</widget>
+					</item>
+				</layout>
 			</item>
 
-			<!-- Balance Card -->
+			<!-- BALANCE CARD -->
 			<item>
-				<widget class="QFrame" name="balanceCard">
+				<widget class="QFrame" name="card">
 					<layout class="QVBoxLayout">
+
 						<item>
 							<widget class="QLabel">
+								<property name="objectName">
+									<string>subText</string>
+								</property>
 								<property name="text">
 									<string>Available Balance</string>
 								</property>
-								<property name="styleSheet">
-									<string notr="true">font-size:18px; color:#aaaaaa;</string>
-								</property>
 							</widget>
 						</item>
+
 						<item>
 							<widget class="QLabel" name="lblBalance">
-								<property name="text">
-									<string>₹ 48,250.00</string>
-								</property>
 								<property name="objectName">
-									<string>balanceAmount</string>
+									<string>balanceText</string>
 								</property>
-							</widget>
-						</item>
-						<item>
-							<widget class="QLabel" name="lblUserName">
 								<property name="text">
-									<string>Nasir Nadaf</string>
-								</property>
-								<property name="styleSheet">
-									<string notr="true">font-size:18px; color:#cccccc;</string>
+									<string>₹ ****</string>
 								</property>
 							</widget>
 						</item>
+
+						<item>
+							<widget class="QPushButton" name="btnShowBalance">
+								<property name="text">
+									<string>Reveal Balance</string>
+								</property>
+							</widget>
+						</item>
+
 					</layout>
 				</widget>
 			</item>
 
-			<!-- Last Transactions -->
+			<!-- ACTION ROW -->
 			<item>
-				<widget class="QLabel">
-					<property name="text">
-						<string>Last Transactions</string>
-					</property>
-					<property name="styleSheet">
-						<string notr="true">font-size: 24px; font-weight: 700; color: #ffffff;</string>
-					</property>
+				<layout class="QHBoxLayout">
+
+					<item>
+						<widget class="QPushButton" name="btnAddFunds">
+							<property name="objectName">
+								<string>primaryBtn</string>
+							</property>
+							<property name="text">
+								<string>Add Funds</string>
+							</property>
+						</widget>
+					</item>
+
+					<item>
+						<widget class="QPushButton" name="btnSendMoney">
+							<property name="text">
+								<string>Send Money</string>
+							</property>
+						</widget>
+					</item>
+
+				</layout>
+			</item>
+
+			<!-- ADD FUNDS SECTION -->
+			<item>
+				<widget class="QFrame" name="card">
+					<layout class="QVBoxLayout">
+
+						<item>
+							<widget class="QLabel">
+								<property name="objectName">
+									<string>heading</string>
+								</property>
+								<property name="text">
+									<string>Add Funds</string>
+								</property>
+							</widget>
+						</item>
+
+						<item>
+							<widget class="QDoubleSpinBox" name="amountInput">
+								<property name="maximum">
+									<double>1000000</double>
+								</property>
+								<property name="prefix">
+									<string>₹ </string>
+								</property>
+							</widget>
+						</item>
+
+						<item>
+							<widget class="QComboBox" name="paymentMethod">
+								<item>
+									<property name="text">
+										<string>Bank Transfer</string>
+									</property>
+								</item>
+								<item>
+									<property name="text">
+										<string>Debit Card</string>
+									</property>
+								</item>
+							</widget>
+						</item>
+
+						<item>
+							<widget class="QPushButton" name="btnAddFunds">
+								<property name="objectName">
+									<string>primaryBtn</string>
+								</property>
+								<property name="text">
+									<string>Add Funds</string>
+								</property>
+							</widget>
+						</item>
+
+					</layout>
 				</widget>
 			</item>
+
+			<!-- TRANSACTIONS -->
 			<item>
-				<widget class="QFrame" name="transactionsFrame">
-					<property name="objectName">
-						<string>infoCard</string>
-					</property>
-					<!-- You can populate this dynamically in code -->
+				<widget class="QFrame" name="cardSoft">
+					<layout class="QVBoxLayout">
+
+						<item>
+							<widget class="QLabel">
+								<property name="objectName">
+									<string>heading</string>
+								</property>
+								<property name="text">
+									<string>Recent Transactions</string>
+								</property>
+							</widget>
+						</item>
+
+						<item>
+							<widget class="QListWidget" name="transactionsList"/>
+						</item>
+
+					</layout>
 				</widget>
 			</item>
+
 		</layout>
 	</widget>
 </UI>
