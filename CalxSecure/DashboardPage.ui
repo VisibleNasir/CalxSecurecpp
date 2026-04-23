@@ -1,0 +1,119 @@
+<UI version="4.0">
+	<class>DashboardPageClass</class>
+	<widget class="QWidget" name="DashboardPageClass">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>1280</width>
+				<height>820</height>
+			</rect>
+		</property>
+		<property name="styleSheet">
+			<string notr="true">
+				QWidget#DashboardPageClass { background-color: #0f0f12; }
+				QFrame#balanceCard {
+				background-color: #1a1a1f;
+				border: 1px solid #333333;
+				border-radius: 20px;
+				padding: 32px;
+				}
+				QLabel#balanceAmount {
+				font-size: 42px;
+				font-weight: 800;
+				color: #00ff9d;
+				}
+				QFrame#infoCard {
+				background-color: #1a1a1f;
+				border: 1px solid #333333;
+				border-radius: 16px;
+				}
+			</string>
+		</property>
+
+		<layout class="QVBoxLayout">
+			<property name="spacing">
+				<number>40</number>
+			</property>
+			<property name="leftMargin">
+				<number>60</number>
+			</property>
+			<property name="topMargin">
+				<number>40</number>
+			</property>
+			<property name="rightMargin">
+				<number>60</number>
+			</property>
+
+			<!-- Header -->
+			<item>
+				<widget class="QLabel">
+					<property name="text">
+						<string>Welcome back, </string>
+					</property>
+					<property name="styleSheet">
+						<string notr="true">font-size: 28px; font-weight: 700; color: #ffffff;</string>
+					</property>
+				</widget>
+			</item>
+
+			<!-- Balance Card -->
+			<item>
+				<widget class="QFrame" name="balanceCard">
+					<layout class="QVBoxLayout">
+						<item>
+							<widget class="QLabel">
+								<property name="text">
+									<string>Available Balance</string>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">font-size:18px; color:#aaaaaa;</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QLabel" name="lblBalance">
+								<property name="text">
+									<string>₹ 48,250.00</string>
+								</property>
+								<property name="objectName">
+									<string>balanceAmount</string>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QLabel" name="lblUserName">
+								<property name="text">
+									<string>Nasir Nadaf</string>
+								</property>
+								<property name="styleSheet">
+									<string notr="true">font-size:18px; color:#cccccc;</string>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+
+			<!-- Last Transactions -->
+			<item>
+				<widget class="QLabel">
+					<property name="text">
+						<string>Last Transactions</string>
+					</property>
+					<property name="styleSheet">
+						<string notr="true">font-size: 24px; font-weight: 700; color: #ffffff;</string>
+					</property>
+				</widget>
+			</item>
+			<item>
+				<widget class="QFrame" name="transactionsFrame">
+					<property name="objectName">
+						<string>infoCard</string>
+					</property>
+					<!-- You can populate this dynamically in code -->
+				</widget>
+			</item>
+		</layout>
+	</widget>
+</UI>

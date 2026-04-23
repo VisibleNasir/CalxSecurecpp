@@ -8,14 +8,13 @@ class Home : public QWidget
 	Q_OBJECT
 
 public:
-	Home(QWidget *parent = nullptr);
+	explicit Home(QWidget *parent = nullptr);
 	~Home();
+	void updateBalanceDisplay();
 
 signals:
-	void transferRequested();
-	void billsRequested();
-	void rechargeRequested();
-	void rewardsRequested();
+	void viewDashboardRequested(); 
+
 private:
 	Ui::HomeClass ui;
 };

@@ -5,15 +5,21 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QTimer>
 #include "AppController.h"
-#include "Home.h"          // ← Your new Home page
+#include "Home.h"
+#include "DashboardPage.h"
+#include "P2PPage.h"
+// Add more pages as you create them
+// #include "BillsPage.h"
+// #include "RechargePage.h"
+// #include "RewardsPage.h"
+
 #include "components/NavBar.h"
 #include "components/DockWidget.h"
-#include <QTimer>
 #include "LoginDialog.h"
 
-AppController::AppController(QWidget* parent)
-    : QMainWindow(parent)
+AppController::AppController(QWidget* parent) : QMainWindow(parent)
 {
     setWindowTitle("CalxSecure");
     resize(1440, 920);
@@ -23,7 +29,6 @@ AppController::AppController(QWidget* parent)
     setupUI();
     setupNavigation();
 
-    // Database Connection
     if (!DatabaseManager::instance().connect()) {
         QMessageBox::critical(this, "Fatal Error",
             "Cannot connect to database.\nPlease check PostgreSQL is running and schema is applied.");
@@ -31,109 +36,122 @@ AppController::AppController(QWidget* parent)
         return;
     }
 
-    // Apply dark theme by default
     switchTheme(true);
 
-    // Optional: Auto login for testing (remove in production)
-    QTimer::singleShot(500, this, [this]() {
-        authManager->login("nasir@example.com", "password123", "user");
-        });
+    // Show login first
+    QTimer::singleShot(300, this, &AppController::showLoginDialog);
 }
+
+void AppController::setupUI()
+{
+    stackedWidget = new QStackedWidget(this);
+
+    m_homePage = new Home(this);
+    m_dashboardPage = new DashboardPage(this);
+    m_p2pPage = new P2PPage(this);
+
+    stackedWidget->addWidget(m_homePage);      // Index 0
+    stackedWidget->addWidget(m_dashboardPage); // Index 1
+    stackedWidget->addWidget(m_p2pPage);       // Index 2
+
+    // Add more pages here later
+    // stackedWidget->addWidget(m_billsPage);     // Index 3
+    // stackedWidget->addWidget(m_rechargePage);  // Index 4
+    // stackedWidget->addWidget(m_rewardsPage);   // Index 5
+}
+
+void AppController::setupNavigation()
+{
+    m_dock = new DockWidget(stackedWidget, this);
+    m_navBar = new NavBar(stackedWidget, this);
+
+    QWidget* mainContainer = new QWidget();
+    QHBoxLayout* hLayout = new QHBoxLayout(mainContainer);
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hLayout->addWidget(m_dock);
+    hLayout->addWidget(stackedWidget, 1);
+
+    QVBoxLayout* mainVertical = new QVBoxLayout();
+    mainVertical->addWidget(m_navBar);
+    mainVertical->addWidget(mainContainer);
+
+    QWidget* root = new QWidget();
+    root->setLayout(mainVertical);
+    setCentralWidget(root);
+
+    // Connections
+    connect(m_dock, &DockWidget::pageRequested, stackedWidget, &QStackedWidget::setCurrentIndex);
+    connect(m_navBar, &NavBar::homeRequested, this, [this]() { stackedWidget->setCurrentIndex(0); });
+
+    // Connect from Home page buttons
+    connect(m_homePage, &Home::viewDashboardRequested, this, [this]() { stackedWidget->setCurrentIndex(1); }); // Dashboard
+    // Add more connections as needed
+}
+
 void AppController::showLoginDialog()
 {
     LoginDialog* dialog = new LoginDialog(this);
-
     connect(dialog, &LoginDialog::loginRequested, this,
         [this](const QString& email, const QString& pass, const QString& role) {
             if (authManager->login(email, pass, role)) {
-                // Success - WebSocket will connect automatically via signal
+                // Update dashboard with user info
+                auto& session = authManager->currentSession();
+                m_dashboardPage->updateBalance(session.balance, session.fullName);
+                stackedWidget->setCurrentIndex(1); // Go to Dashboard after login
             }
             else {
                 QMessageBox::warning(this, "Login Failed", "Invalid credentials");
             }
         });
-
     //dialog->exec();
 }
 
 void AppController::switchTheme(bool dark)
 {
-    QString style = dark ? GlobalStyle::getDarkTheme() : GlobalStyle::getLightTheme();
-    qApp->setStyleSheet(style);
+    // Enforce strict global dark theme for the entire application
+    QString globalStyle = R"(
+        QWidget {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Segoe UI', Inter, sans-serif;
+        }
+        QLabel {
+            background-color: transparent;
+            color: #ffffff;
+        }
+        QPushButton {
+            background-color: #1a1a1f;
+            color: #ffffff;
+            border: 1px solid #333340;
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        QPushButton:hover {
+            background-color: #2a2a35;
+            border: 1px solid #5c5cff;
+        }
+        QLineEdit, QDoubleSpinBox {
+            background-color: #0f0f12;
+            color: #ffffff;
+            border: 1px solid #2a2a35;
+            border-radius: 8px;
+            padding: 8px;
+        }
+        QLineEdit:focus, QDoubleSpinBox:focus {
+            border: 1px solid #5c5cff;
+        }
+        QScrollArea {
+            border: none;
+            background-color: transparent;
+        }
+    )";
+    
+    qApp->setStyleSheet(globalStyle);
 
-    QPalette palette = dark
-        ? QPalette(QColor("#0f0f12"), QColor("#1a1a1f"))
-        : QPalette(QColor("#f8f9fa"));
+    QPalette palette;
+    palette.setColor(QPalette::Window, QColor("#050505"));
+    palette.setColor(QPalette::WindowText, Qt::white);
+    palette.setColor(QPalette::Base, QColor("#0f0f12"));
+    palette.setColor(QPalette::Text, Qt::white);
     qApp->setPalette(palette);
-}
-
-void AppController::setupUI()
-{
-    // Create stacked widget for multiple pages
-    stackedWidget = new QStackedWidget(this);
-
-    // Add your new Home page (designed with .ui file)
-    m_homePage = new Home(this);           // Home class from ui_Home.h
-    stackedWidget->addWidget(m_homePage);
-
-    // TODO: Add more pages later (P2PPage, BillsPage, etc.)
-    // stackedWidget->addWidget(m_p2pPage);
-
-    stackedWidget->setCurrentIndex(0);
-}
-
-void AppController::setupNavigation()
-{
-    // Left Dock (macOS style)
-    m_dock = new DockWidget(stackedWidget, this);
-
-    // Top Navigation Bar (Floating style)
-    m_navBar = new NavBar(stackedWidget, this);
-
-    // Main container with Left Dock + Content Area
-    QWidget* mainContainer = new QWidget(this);
-    QHBoxLayout* hLayout = new QHBoxLayout(mainContainer);
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->setSpacing(0);
-
-    hLayout->addWidget(m_dock);
-    hLayout->addWidget(stackedWidget, 1);   // Content takes remaining space
-
-    // Optional: Add Top NavBar above everything
-    QVBoxLayout* mainVertical = new QVBoxLayout();
-    mainVertical->setContentsMargins(0, 0, 0, 0);
-    mainVertical->setSpacing(0);
-    mainVertical->addWidget(m_navBar);
-    mainVertical->addWidget(mainContainer);
-
-    // Set as central widget
-    QWidget* rootWidget = new QWidget(this);
-    rootWidget->setLayout(mainVertical);
-    setCentralWidget(rootWidget);
-
-    // Connect signals
-    connect(m_dock, &DockWidget::pageRequested,
-        stackedWidget, &QStackedWidget::setCurrentIndex);
-
-    connect(m_navBar, &NavBar::homeRequested, this, [this]() {
-        stackedWidget->setCurrentIndex(0);
-        });
-
-    // Connect buttons from Home.ui Top Dock to navigation
-    //connect(m_homePage->ui.btnTransfer, &QPushButton::clicked, this, [this]() {
-    //    // You can change index when you add P2P page (e.g. index 1)
-    //    stackedWidget->setCurrentIndex(1);   // Change later when more pages added
-    //    });
-
-    //connect(m_homePage->ui.btnBills, &QPushButton::clicked, this, [this]() {
-    //    stackedWidget->setCurrentIndex(2);   // Future Bills page
-    //    });
-
-    //connect(m_homePage->ui.btnRecharge, &QPushButton::clicked, this, [this]() {
-    //    stackedWidget->setCurrentIndex(3);
-    //    });
-
-    //connect(m_homePage->ui.btnRewards, &QPushButton::clicked, this, [this]() {
-    //    stackedWidget->setCurrentIndex(4);
-    //    });
 }
