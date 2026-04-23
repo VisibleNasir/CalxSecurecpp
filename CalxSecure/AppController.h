@@ -6,6 +6,8 @@
 #include "Home.h"
 #include "components/NavBar.h"
 #include "components/DockWidget.h"
+#include "DashboardPage.h"
+#include "P2PPage.h"
 
 class AppController : public QMainWindow
 {
@@ -26,5 +28,7 @@ private:
     DockWidget* m_dock;
     QStackedWidget* stackedWidget;
     AuthManager* authManager;
+    DashboardPage* m_dashboardPage = nullptr;
+    P2PPage* m_p2pPage = nullptr;
 };
 

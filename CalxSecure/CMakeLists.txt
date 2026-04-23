@@ -13,6 +13,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS
     Gui
     Widgets
     Sql
+    Network
 )
 
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
@@ -20,6 +21,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     Gui
     Widgets
     Sql
+    Network
 )
 
 qt_standard_project_setup()
@@ -27,7 +29,7 @@ qt_standard_project_setup()
 set(PROJECT_SOURCES
     main.cpp
     CalxSecure.ui
-    CalxSecure.h
+    CalxSecure.h 
     CalxSecure.cpp
     AppController.h
     AppController.cpp
@@ -49,13 +51,24 @@ set(PROJECT_SOURCES
     components/GradientLabel.cpp
     components/NavBar.h
     components/NavBar.cpp
-    Home.ui
+    Home.ui 
     Home.h
     Home.cpp
 
     LoginDialog.ui
     LoginDialog.h
     LoginDialog.cpp
+    DashboardPage.ui
+    DashboardPage.h
+    DashboardPage.cpp
+    P2PPage.ui
+    P2PPage.h
+    P2PPage.cpp
+
+    core/AppState.h
+    core/AppState.cpp
+    services/ApiClient.h
+    services/ApiClient.cpp
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
@@ -70,4 +83,5 @@ target_link_libraries(${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Gui
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Sql
+        Qt${QT_VERSION_MAJOR}::Network
 )

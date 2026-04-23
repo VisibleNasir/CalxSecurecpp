@@ -164,7 +164,19 @@
 								</property>
 							</widget>
 						</item>
-
+						<item>
+							<widget class="QLabel" name="lblEmailError">
+								<property name="styleSheet">
+									<string>color:#ff4d4f; font-size:12px;</string>
+								</property>
+								<property name="text">
+									<string></string>
+								</property>
+								<property name="visible">
+									<bool>false</bool>
+								</property>
+							</widget>
+						</item>
 						<!-- Password -->
 						<item>
 							<widget class="QLineEdit" name="lePassword">
@@ -176,7 +188,20 @@
 								</property>
 							</widget>
 						</item>
-
+						<!-- Password Error -->
+						<item>
+							<widget class="QLabel" name="lblPasswordError">
+								<property name="styleSheet">
+									<string>color:#ff4d4f; font-size:12px;</string>
+								</property>
+								<property name="text">
+									<string></string>
+								</property>
+								<property name="visible">
+									<bool>false</bool>
+								</property>
+							</widget>
+						</item>
 						<!-- Role -->
 						<item>
 							<widget class="QComboBox" name="cbRole">
