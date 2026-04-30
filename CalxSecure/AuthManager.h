@@ -36,6 +36,8 @@ public:
 
     bool login(const QString& email, const QString& password, const QString& roleHint = "");
 
+    bool storeSessionToken(int userId, const QString& token, const QDateTime& expires);
+
     bool logout();
 
     // Session & Validation
@@ -49,7 +51,7 @@ public:
     bool isRegularUser() const;
 
     // Password & Token utilities (public for testing)
-    static QByteArray hashPassword(const QString& password, const QByteArray& salt);
+    static QString hashPassword(const QString& password, const QByteArray& salt);
     static QByteArray generateSalt(int length = 32);
     static QString generateSessionToken(int length = 64);
 

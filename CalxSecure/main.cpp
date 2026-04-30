@@ -10,6 +10,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     
+    // Do not exit the application when simple message boxes or the login dialog are closed
+    app.setQuitOnLastWindowClosed(false);
+    
     // Launch the AppController which acts as our main window and router
     AppController window;
     window.show();

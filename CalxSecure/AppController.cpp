@@ -1,4 +1,8 @@
-﻿#include "GlobalStyle.h"
+#include "AppController.h"
+#include "Home.h"
+#include "DashboardPage.h"
+#include "LoginDialog.h"
+#include "core/AppState.h"
 #include <QApplication>
 #include <QPalette>
 #include <QMessageBox>
@@ -8,6 +12,8 @@
 #include <QPropertyAnimation>
 #include <QEasingCurve>
 #include <QGraphicsBlurEffect>
+#include <QSettings>
+#include <QCloseEvent>
 
 #include "AppController.h"
 #include "Home.h"
@@ -28,7 +34,7 @@ AppController::AppController(QWidget* parent) : QMainWindow(parent)
 
     if (!DatabaseManager::instance().connect()) {
         QMessageBox::critical(this, "Fatal Error",
-            "Cannot connect to database.\nCheck PostgreSQL.");
+            "Cannot connect to database.\nCheck PostgreSQL is running and tables exist.");
         qApp->quit();
         return;
     }
@@ -49,6 +55,11 @@ void AppController::setupUI()
     stackedWidget->addWidget(m_homePage);      // 0
     stackedWidget->addWidget(m_dashboardPage); // 1
     stackedWidget->addWidget(m_p2pPage);       // 2
+
+    // Restore window geometry
+    QSettings settings("CalxSecure", "CalxSecureApp");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
 }
 void AppController::setupNavigation()
 {
@@ -59,8 +70,8 @@ void AppController::setupNavigation()
     // ===== SIDEBAR =====
     QFrame* sidebar = new QFrame();
     sidebar->setObjectName("sidebar");
-    sidebar->setMinimumWidth(80); // Increased resting width
-    sidebar->setMaximumWidth(280); // Increased expanded width
+    sidebar->setMinimumWidth(80);
+    sidebar->setMaximumWidth(280);
 
     QVBoxLayout* sideLayout = new QVBoxLayout(sidebar);
 
@@ -117,13 +128,13 @@ void AppController::setupNavigation()
         anim->setEasingCurve(QEasingCurve::InOutCubic);
 
         if (isCollapsed) {
-            anim->setEndValue(280); // Match new max width
+            anim->setEndValue(280);
             btnHome->setText("Home");
             btnDashboard->setText("Dashboard");
             btnP2P->setText("Payments");
         }
         else {
-            anim->setEndValue(80); // Match new min width
+            anim->setEndValue(80);
             btnHome->setText("");
             btnDashboard->setText("");
             btnP2P->setText("");
@@ -184,12 +195,12 @@ void AppController::showLoginDialog()
 
     connect(dialog, &LoginDialog::signupRequested, this,
         [this, dialog](const QString& username, const QString& email, const QString& pass, const QString& fullName, const QString& phone) {
-            
+
             QString defaultRole = "user"; // Standard user role
-            
+
             // Step 1: Attempt to create the user in DB
             if (authManager->signup(username, email, pass, fullName, phone, defaultRole)) {
-                
+
                 // Step 2: Auto-login after successful creation
                 if (authManager->login(email, pass, defaultRole)) {
                     auto& s = authManager->currentSession();
@@ -201,19 +212,19 @@ void AppController::showLoginDialog()
 
                     AppState::instance().setSession(sessionData);
                     m_dashboardPage->updateBalance(0.0, s.fullName);
-                    
+
                     stackedWidget->setCurrentIndex(1); // Go to Dashboard
                     dialog->close();
                 } else {
                     QMessageBox::warning(dialog, "Auto-Login Failed", "Account created, but automatic login failed.");
                 }
-            } 
+            }
         });
 
     dialog->show();
 }
 
-void AppController::switchTheme(bool dark)
+void AppController::switchTheme(bool /*dark*/)
 {
     QString globalStyle = R"(
         QWidget {
@@ -257,4 +268,12 @@ void AppController::switchTheme(bool dark)
     palette.setColor(QPalette::Base, QColor("#0f0f12"));
     palette.setColor(QPalette::Text, Qt::white);
     qApp->setPalette(palette);
+}
+
+void AppController::closeEvent(QCloseEvent* event)
+{
+    QSettings settings("CalxSecure", "CalxSecureApp");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
+    QMainWindow::closeEvent(event);
 }

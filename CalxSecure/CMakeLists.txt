@@ -39,8 +39,6 @@ set(PROJECT_SOURCES
     DatabaseManager.cpp
     GlobalStyle.h
     GlobalStyle.cpp
-    HomePage.h
-    HomePage.cpp
     components/AnimatedButton.h
     components/AnimatedButton.cpp
     components/Card.h
