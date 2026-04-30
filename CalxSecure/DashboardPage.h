@@ -21,7 +21,9 @@ private slots:
     void onRechargeClicked();
     void setupSidebarNavigation();
     void refreshBalance();
-
+    void onLogoutClicked();
+signals:
+    void logoutRequested();
 private:
     Ui::DashboardPageClass ui;
     double currentBalance = 12450.75;

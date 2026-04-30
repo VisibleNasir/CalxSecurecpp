@@ -8,9 +8,15 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    //CalxSecure window;
-    //AppController window;
-    LoginDialog window;
+    
+    // FIX: Do not kill the application when simple message boxes or the login dialog are manipulated
+    app.setQuitOnLastWindowClosed(false);
+    
+    // Launch the AppController which acts as our main window and router
+    AppController window;
+    
+    // Since AppController hides itself instantly to show LoginDialog, we call show here.
     window.show();
+    
     return app.exec();
 }

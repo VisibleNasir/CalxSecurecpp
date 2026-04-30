@@ -1,33 +1,33 @@
-#pragma once
+#ifndef APPCONTROLLER_H
+#define APPCONTROLLER_H
 
 #include <QMainWindow>
 #include <QStackedWidget>
 #include "AuthManager.h"
-#include "Home.h"
-#include "components/NavBar.h"
-#include "components/DockWidget.h"
-#include "DashboardPage.h"
+
+class Home;
+class DashboardPage;
 
 class AppController : public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit AppController(QWidget* parent = nullptr);
-    void closeEvent(QCloseEvent* event) override;
-    void switchTheme(bool dark);
-    void showLoginDialog();
 
 protected:
-    void setupUI();
-    void setupNavigation();
+    void closeEvent(QCloseEvent* event) override;
 
 private:
-    Home* m_homePage;
-    NavBar* m_navBar;
-    DockWidget* m_dock;
-    QStackedWidget* stackedWidget;
-    AuthManager* authManager;
+    void setupUI();
+    void setupNavigation();
+    void showLoginDialog();
+    void switchTheme(bool dark);
+
+    QStackedWidget* stackedWidget = nullptr;
+    Home* m_homePage = nullptr;
     DashboardPage* m_dashboardPage = nullptr;
+    AuthManager* authManager = nullptr;
 };
 
+#endif // APPCONTROLLER_H

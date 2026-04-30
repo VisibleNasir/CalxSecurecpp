@@ -61,8 +61,9 @@
 				font-size: 17px;
 				font-weight: 700;
 				}
-				QPushButton:pressed {
-				background-color: #cccccc;
+
+				QPushButton#primaryBtn:hover {
+				background-color: #e5e5e5;
 				}
 
 				QPushButton#primaryBtn:pressed {
@@ -89,8 +90,6 @@
 				font-weight: 700;
 				letter-spacing: -1px;
 				}
-			</string>
-		</property>
 
 				/* Muted Text */
 				QLabel#mutedText {
@@ -191,7 +190,7 @@
 						<item>
 							<widget class="QPushButton" name="navBtn">
 								<property name="text">
-									<string>Settings</string>
+									<string>Analytics</string>
 								</property>
 								<property name="flat">
 									<bool>true</bool>
@@ -225,8 +224,8 @@
 							<property name="spacing">
 								<number>100</number>
 							</property>
-							<property name="topMargin">
-								<number>60</number>
+							<property name="leftMargin">
+								<number>120</number>
 							</property>
 							<property name="rightMargin">
 								<number>120</number>
@@ -238,7 +237,7 @@
 								<number>120</number>
 							</property>
 
-							<!-- HERO SECTION -->
+							<!-- HERO -->
 							<item alignment="Qt::AlignHCenter">
 								<widget class="QLabel" name="heroTitle">
 									<property name="text">
@@ -270,57 +269,38 @@
 								</widget>
 							</item>
 
-							<!-- SECURITY SECTION -->
+							<!-- FEATURES -->
 							<item>
-								<widget class="QLabel" name="lblSecurityTitle">
+								<widget class="QLabel" name="sectionTitle">
 									<property name="text">
 										<string>Everything you need to move money faster</string>
-									</property>
-									<property name="styleSheet">
-										<string notr="true">font-size: 28px; font-weight: 700; color: #ffffff;</string>
-									</property>
-									<property name="alignment">
-										<set>Qt::AlignCenter</set>
 									</property>
 								</widget>
 							</item>
 
 							<item>
-								<layout class="QHBoxLayout" name="securityCardsLayout">
+								<layout class="QHBoxLayout">
 									<property name="spacing">
 										<number>28</number>
 									</property>
 
-									<!-- Card 1 -->
 									<item>
-										<widget class="QFrame" name="cardEncryption">
-											<property name="objectName">
-												<string>securityCard</string>
-											</property>
+										<widget class="QFrame" name="card">
 											<layout class="QVBoxLayout">
 												<item>
-													<widget class="QLabel" name="lblEncTitle">
+													<widget class="QLabel">
 														<property name="text">
 															<string>🔐 Bank-Grade Security</string>
-														</property>
-														<property name="objectName">
-															<string>cardTitle</string>
 														</property>
 													</widget>
 												</item>
 												<item>
-													<widget class="QLabel" name="lblEncDesc">
+													<widget class="QLabel" name="mutedText">
 														<property name="text">
 															<string>End-to-end encryption and multi-layer protection for every transaction.</string>
 														</property>
 														<property name="wordWrap">
 															<bool>true</bool>
-														</property>
-														<property name="wordWrap">
-															<bool>true</bool>
-														</property>
-														<property name="objectName">
-															<string>cardDesc</string>
 														</property>
 													</widget>
 												</item>
@@ -328,22 +308,18 @@
 										</widget>
 									</item>
 
-									<!-- Card 2 -->
 									<item>
-										<widget class="QFrame" name="cardFraud">
-											<property name="objectName">
-												<string>securityCard</string>
-											</property>
+										<widget class="QFrame" name="card">
 											<layout class="QVBoxLayout">
 												<item>
-													<widget class="QLabel" name="lblFraudTitle">
+													<widget class="QLabel">
 														<property name="text">
 															<string>⚡ Lightning Fast Transfers</string>
 														</property>
 													</widget>
 												</item>
 												<item>
-													<widget class="QLabel" name="lblFraudDesc">
+													<widget class="QLabel" name="mutedText">
 														<property name="text">
 															<string>Instant P2P and global transfers with real-time settlement.</string>
 														</property>
@@ -356,15 +332,11 @@
 										</widget>
 									</item>
 
-									<!-- Card 3 -->
 									<item>
-										<widget class="QFrame" name="cardMFA">
-											<property name="objectName">
-												<string>securityCard</string>
-											</property>
+										<widget class="QFrame" name="card">
 											<layout class="QVBoxLayout">
 												<item>
-													<widget class="QLabel" name="lblMFATitle">
+													<widget class="QLabel">
 														<property name="text">
 															<string>📈 Intelligent Insights</string>
 														</property>
@@ -467,6 +439,4 @@
 			</item>
 		</layout>
 	</widget>
-	<resources/>
-	<connections/>
 </UI>

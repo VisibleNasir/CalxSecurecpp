@@ -20,6 +20,7 @@ signals:
 	void billsRequested();
 	void rechargeRequested();
 	void rewardsRequested();
+    void loginRequested();
 private:
     Ui::HomeClass ui;
     void setupAnimations();

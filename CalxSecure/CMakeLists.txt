@@ -20,6 +20,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     Gui
     Widgets
     Sql
+    Network
 )
 
 qt_standard_project_setup()
@@ -57,14 +58,14 @@ set(PROJECT_SOURCES
     DashboardPage.ui
     DashboardPage.h
     DashboardPage.cpp
-
+     
     core/AppState.h
     core/AppState.cpp
     services/ApiClient.h
     services/ApiClient.cpp
     services/PaymentService.h
     services/PaymentService.cpp
-
+     
 
 )
 
@@ -80,4 +81,5 @@ target_link_libraries(${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Gui
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Sql
+        Qt${QT_VERSION_MAJOR}::Network
 )

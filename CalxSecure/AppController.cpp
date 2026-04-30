@@ -1,17 +1,17 @@
-﻿#include "GlobalStyle.h"
-#include <QApplication>
-#include <QPalette>
-#include <QStyleFactory>
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include "AppController.h"
+﻿#include "AppController.h"
 #include "Home.h"
 #include "DashboardPage.h"
 #include "LoginDialog.h"
+#include "core/AppState.h"
+#include <QApplication>
+#include <QPalette>
+#include <QMessageBox>
+#include <QVBoxLayout>
+#include <QTimer>
+#include <QSettings>
+#include <QCloseEvent>
 
-AppController::AppController(QWidget* parent)
-    : QMainWindow(parent)
+AppController::AppController(QWidget* parent) : QMainWindow(parent)
 {
     setWindowTitle("CalxSecure");
     resize(1440, 920);
@@ -21,68 +21,56 @@ AppController::AppController(QWidget* parent)
     setupUI();
     setupNavigation();
 
-    // Database Connection
     if (!DatabaseManager::instance().connect()) {
         QMessageBox::critical(this, "Fatal Error",
-            "Cannot connect to database.\nPlease check PostgreSQL is running and schema is applied.");
+            "Cannot connect to database.\nCheck PostgreSQL is running and tables exist.");
         qApp->quit();
         return;
     }
 
-    // Apply dark theme by default
     switchTheme(true);
-
-    // Optional: Auto login for testing (remove in production)
-    QTimer::singleShot(500, this, [this]() {
-        authManager->login("nasir@example.com", "password123", "user");
-        });
+    QTimer::singleShot(200, this, &AppController::showLoginDialog);
 }
-void AppController::showLoginDialog()
+
+void AppController::setupUI()
 {
-    QSettings settings("CalxSecure", "CalxSecureApp");
-
-    restoreGeometry(settings.value("geometry").toByteArray());
-    restoreState(settings.value("windowState").toByteArray());
-
     stackedWidget = new QStackedWidget(this);
-
     m_homePage = new Home(this);
     m_dashboardPage = new DashboardPage(this);
 
-    stackedWidget->addWidget(m_homePage);      // 0
+    stackedWidget->addWidget(m_homePage);     // 0
     stackedWidget->addWidget(m_dashboardPage); // 1
-}
-void AppController::closeEvent(QCloseEvent* event)
-{
+    connect(m_dashboardPage, &DashboardPage::logoutRequested, this, [this]() {
+        authManager->logout();
+        this->hide();
+        showLoginDialog();
+        });
+    // Restore window geometry
     QSettings settings("CalxSecure", "CalxSecureApp");
-    settings.setValue("geometry", saveGeometry());
-    settings.setValue("windowState", saveState());
-    QMainWindow::closeEvent(event);
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
 }
+
 void AppController::setupNavigation()
 {
     QWidget* root = new QWidget(this);
     QVBoxLayout* mainLayout = new QVBoxLayout(root);
     mainLayout->setContentsMargins(0, 0, 0, 0);
-
-    // ===== FULL SCREEN CONTENT ONLY =====
     mainLayout->addWidget(stackedWidget);
-
     setCentralWidget(root);
 
-    // ===== HOME CTA → LOGIN =====
-    connect(m_homePage, &Home::loginRequested,
-        this, &AppController::showLoginDialog);
+    connect(m_homePage, &Home::loginRequested, this, &AppController::showLoginDialog);
 }
+
 void AppController::showLoginDialog()
 {
     this->hide();
 
-    LoginDialog* dialog = new LoginDialog(nullptr);  // no parent = independent window
+    LoginDialog* dialog = new LoginDialog(nullptr);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
-    // === SAFE CONNECTIONS ===
+    // Login
     connect(dialog, &LoginDialog::loginRequested, this,
         [this, dialog](const QString& email, const QString& pass, const QString& role) {
             if (authManager->login(email, pass, role)) {
@@ -92,7 +80,7 @@ void AppController::showLoginDialog()
                 sd.userId = QString::number(s.userId);
                 sd.fullName = s.fullName;
                 sd.email = s.email;
-                sd.balance = s.balance;   // you'll add balance later
+                sd.balance = s.balance;
 
                 AppState::instance().setSession(sd);
                 m_dashboardPage->updateBalance(s.balance, s.fullName);
@@ -100,46 +88,66 @@ void AppController::showLoginDialog()
                 this->show();
                 stackedWidget->setCurrentIndex(1); // Dashboard
 
-                dialog->close();   // safer than deleteLater() here
+                // Use hide and deleteLater instead of close() since closeEvent is ignored
+                dialog->hide();
+                dialog->deleteLater();
             }
             else {
-                QMessageBox::warning(dialog, "Login Failed", "Invalid credentials or database error");
+                QMessageBox::warning(dialog, "Login Failed", "Invalid credentials");
             }
         });
 
+    // Signup
     connect(dialog, &LoginDialog::signupRequested, this,
-        [this, dialog](const QString& username, const QString& email,
-            const QString& pass, const QString& fullName, const QString& phone) {
-
+        [this, dialog](const QString& username, const QString& email, const QString& pass,
+            const QString& fullName, const QString& phone) {
                 if (authManager->signup(username, email, pass, fullName, phone, "user")) {
                     QMessageBox::information(dialog, "Success",
-                        "Account created! Please sign in with your new credentials.");
+                        "Account created successfully!\nPlease sign in.");
                     dialog->switchToLoginMode();
                 }
-                // signupFailed signal is already connected in your code
         });
 
-    // Forward AuthManager errors to dialog
     connect(authManager, &AuthManager::signupFailed, dialog,
         [dialog](const QString& msg) {
             QMessageBox::warning(dialog, "Signup Failed", msg);
         });
 
-    // Connect buttons from Home.ui Top Dock to navigation
-    //connect(m_homePage->ui.btnTransfer, &QPushButton::clicked, this, [this]() {
-    //    // You can change index when you add P2P page (e.g. index 1)
-    //    stackedWidget->setCurrentIndex(1);   // Change later when more pages added
-    //    });
+    dialog->show();
+}
 
-    //connect(m_homePage->ui.btnBills, &QPushButton::clicked, this, [this]() {
-    //    stackedWidget->setCurrentIndex(2);   // Future Bills page
-    //    });
+void AppController::switchTheme(bool /*dark*/)
+{
+    QString globalStyle = R"(
+        QWidget { background-color: #050505; color: #ffffff; font-family: 'Segoe UI', Inter, sans-serif; }
+        QLabel { background-color: transparent; color: #ffffff; }
+        QPushButton {
+            background-color: #1a1a1f; color: #ffffff;
+            border: 1px solid #333340; border-radius: 8px; padding: 8px 16px;
+        }
+        QPushButton:hover {
+            background-color: #2a2a35; border: 1px solid #5c5cff;
+        }
+        QLineEdit, QDoubleSpinBox, QComboBox {
+            background-color: #0f0f12; color: #ffffff;
+            border: 1px solid #2a2a35; border-radius: 8px; padding: 8px;
+        }
+        QScrollArea { border: none; background-color: transparent; }
+    )";
+    qApp->setStyleSheet(globalStyle);
 
-    //connect(m_homePage->ui.btnRecharge, &QPushButton::clicked, this, [this]() {
-    //    stackedWidget->setCurrentIndex(3);
-    //    });
+    QPalette palette;
+    palette.setColor(QPalette::Window, QColor("#050505"));
+    palette.setColor(QPalette::WindowText, Qt::white);
+    palette.setColor(QPalette::Base, QColor("#0f0f12"));
+    palette.setColor(QPalette::Text, Qt::white);
+    qApp->setPalette(palette);
+}
 
-    //connect(m_homePage->ui.btnRewards, &QPushButton::clicked, this, [this]() {
-    //    stackedWidget->setCurrentIndex(4);
-    //    });
+void AppController::closeEvent(QCloseEvent* event)
+{
+    QSettings settings("CalxSecure", "CalxSecureApp");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
+    QMainWindow::closeEvent(event);
 }
