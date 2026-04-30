@@ -1,4 +1,4 @@
-#include "AppState.h"
+﻿#include "AppState.h"
 
 // ================= SINGLETON =================
 AppState& AppState::instance() {

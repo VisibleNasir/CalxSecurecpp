@@ -4,9 +4,9 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include "AuthManager.h"
-
-class Home;
-class DashboardPage;
+#include "Home.h"
+#include "DashboardPage.h"
+#include "P2PPage.h"
 
 class AppController : public QMainWindow
 {
@@ -27,6 +27,7 @@ private:
     QStackedWidget* stackedWidget = nullptr;
     Home* m_homePage = nullptr;
     DashboardPage* m_dashboardPage = nullptr;
+    P2PPage* m_p2pPage = nullptr;
     AuthManager* authManager = nullptr;
 };
 

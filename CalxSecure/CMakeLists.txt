@@ -13,6 +13,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS
     Gui
     Widgets
     Sql
+    Network
 )
 
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
@@ -28,7 +29,7 @@ qt_standard_project_setup()
 set(PROJECT_SOURCES
     main.cpp
     CalxSecure.ui
-    CalxSecure.h
+    CalxSecure.h 
     CalxSecure.cpp
     AppController.h
     AppController.cpp
@@ -48,7 +49,7 @@ set(PROJECT_SOURCES
     components/GradientLabel.cpp
     components/NavBar.h
     components/NavBar.cpp
-    Home.ui
+    Home.ui 
     Home.h
     Home.cpp
 
@@ -58,14 +59,16 @@ set(PROJECT_SOURCES
     DashboardPage.ui
     DashboardPage.h
     DashboardPage.cpp
-     
+    P2PPage.ui
+    P2PPage.h
+    P2PPage.cpp
+
     core/AppState.h
     core/AppState.cpp
     services/ApiClient.h
     services/ApiClient.cpp
     services/PaymentService.h
     services/PaymentService.cpp
-     
 
 )
 

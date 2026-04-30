@@ -1,35 +1,31 @@
 #pragma once
+
 #include <QWidget>
+#include <QListWidget>
 #include "ui_DashboardPage.h"
+#include "services/PaymentService.h"
 
 class DashboardPage : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit DashboardPage(QWidget* parent = nullptr);
+    DashboardPage(QWidget* parent = nullptr);
     ~DashboardPage();
 
-    // Updated to match what AppController is calling
-    void updateBalance(double balance, const QString& fullName = "Nasir");
+    void loadDummyTransactions();
+    void updateBalance(double balance, const QString& fullName);
 
 private slots:
     void onShowBalanceClicked();
-    void onAddFundsConfirmClicked();
+    void onAddFundsClicked();
     void onSendMoneyClicked();
-    void onPayNowClicked();
-    void onRechargeClicked();
-    void setupSidebarNavigation();
     void refreshBalance();
-    void onLogoutClicked();
-signals:
-    void logoutRequested();
+    void simulatePayment(const QString& txId);
+    void onPaymentCompleted(bool success, double balance);
+
 private:
     Ui::DashboardPageClass ui;
-    double currentBalance = 12450.75;
-    bool balanceVisible = false;
 
-    void loadDummyData();
-    void showSuccessMessage(const QString& title, const QString& message);
-    void showErrorMessage(const QString& title, const QString& message);
+    double currentBalance;
 };

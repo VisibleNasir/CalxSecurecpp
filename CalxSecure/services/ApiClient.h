@@ -18,7 +18,7 @@ private:
     ~ApiClient() = default;
     Q_DISABLE_COPY(ApiClient)
 
-        QNetworkAccessManager* m_networkManager;
+    QNetworkAccessManager* m_networkManager;
     QString m_baseUrl;
     QNetworkRequest createRequest(const QString& endpoint);
 };
