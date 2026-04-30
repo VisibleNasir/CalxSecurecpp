@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+	<class>DashboardPageClass</class>
+	<widget class="QWidget" name="DashboardPageClass">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>1280</width>
+				<height>820</height>
+			</rect>
+		</property>
+		<property name="styleSheet">
+			<string notr="true">
+				QWidget#DashboardPageClass {
+				background-color: #09090b;
+				font-family: Inter, Segoe UI, sans-serif;
+				color: #ffffff;
+				}
+
+				/* Sidebar */
+				QWidget#Sidebar {
+				background-color: #0a0a0a;
+				border-right: 1px solid #27272a;
+				min-width: 260px;
+				}
+
+				QPushButton {
+				text-align: left;
+				padding: 14px 24px;
+				border: none;
+				background: transparent;
+				color: #e5e5e5;
+				font-size: 15px;
+				font-weight: 500;
+				}
+
+				QPushButton:hover {
+				background-color: #1f1f22;
+				color: #ffffff;
+				}
+
+				QPushButton:checked {
+				background-color: #18181b;
+				color: #60a5fa;
+				border-left: 4px solid #60a5fa;
+				}
+
+				/* Cards */
+				QFrame#card, QFrame#statsCard, QFrame#balanceCard, QFrame#card_2, QFrame#card_3 {
+				background-color: #111113;
+				border: 1px solid #27272a;
+				border-radius: 20px;
+				padding: 24px;
+				}
+
+				/* Typography */
+				QLabel {
+				color: #ffffff;
+				}
+
+				QLabel#greeting {
+				font-size: 28px;
+				font-weight: 600;
+				}
+
+				QLabel#balanceAmount {
+				font-size: 48px;
+				font-weight: 700;
+				letter-spacing: -1px;
+				}
+
+				QLabel[class="subheading"] {
+				font-size: 18px;
+				font-weight: 500;
+				color: #a1a1aa;
+				}
+
+				/* Buttons */
+				QPushButton {
+				border-radius: 12px;
+				padding: 12px 20px;
+				font-weight: 600;
+				}
+
+				QPushButton#btnShowBalance {
+				background-color: #18181b;
+				border: 1px solid #3b82f6;
+				color: #ffffff;
+				}
+
+				QPushButton#btnSendMoney, QPushButton#btnAddFunds, QPushButton#btnAddFundsConfirm,
+				QPushButton#btnPay, QPushButton#btnRecharge {
+				background-color: #3b82f6;
+				color: #ffffff;
+				}
+
+				QPushButton:hover {
+				background-color: #2563eb;
+				}
+
+				/* Form Elements */
+				QLineEdit, QDoubleSpinBox, QComboBox {
+				background-color: #1f1f23;
+				border: 1px solid #3b82f6;
+				border-radius: 10px;
+				padding: 10px;
+				color: #ffffff;
+				}
+
+				QListWidget {
+				background-color: transparent;
+				border: none;
+				}
+
+				QListWidget::item {
+				padding: 12px;
+				border-bottom: 1px solid #1f1f23;
+				color: #e5e5e5;
+				}
+			</string>
+		</property>
+
+		<layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,4">
+			<item>
+				<widget class="QWidget" name="Sidebar" native="true">
+					<layout class="QVBoxLayout">
+						<property name="spacing">8</property>
+						<property name="leftMargin">16</property>
+						<property name="topMargin">40</property>
+						<property name="rightMargin">16</property>
+
+						<item>
+							<widget class="QLabel" name="label">
+								<property name="styleSheet">font-size: 26px; font-weight: 800; color: #3b82f6; padding: 0 20px 40px;</property>
+								<property name="text">
+									<string>CalxSecure</string>
+								</property>
+							</widget>
+						</item>
+
+						<item>
+							<widget class="QPushButton" name="Home_pushButton">
+								<property name="text">
+									<string>Home</string>
+								</property>
+								<property name="checkable">
+									<bool>true</bool>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="Dashboard_pushButton">
+								<property name="text">
+									<string>Dashboard</string>
+								</property>
+								<property name="checkable">
+									<bool>true</bool>
+								</property>
+								<property name="checked">
+									<bool>true</bool>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="Transfer_pushButton">
+								<property name="text">
+									<string>Transfer Funds</string>
+								</property>
+								<property name="checkable">
+									<bool>true</bool>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="P2PTransfer_pushButton">
+								<property name="text">
+									<string>P2P Transfer</string>
+								</property>
+								<property name="checkable">
+									<bool>true</bool>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="Bills_pushButton">
+								<property name="text">
+									<string>Bills</string>
+								</property>
+								<property name="checkable">
+									<bool>true</bool>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="Recharge_pushButton">
+								<property name="text">
+									<string>Recharge</string>
+								</property>
+								<property name="checkable">
+									<bool>true</bool>
+								</property>
+							</widget>
+						</item>
+						<item>
+							<widget class="QPushButton" name="Rewards_pushButton">
+								<property name="text">
+									<string>Rewards</string>
+								</property>
+								<property name="checkable">
+									<bool>true</bool>
+								</property>
+							</widget>
+						</item>
+
+						<item>
+							<spacer name="verticalSpacer"/>
+						</item>
+					</layout>
+				</widget>
+			</item>
+
+			<!-- Main Content Area -->
+			<item>
+				<widget class="QWidget" name="widget" native="true">
+					<layout class="QHBoxLayout" name="horizontalLayout">
+						<item>
+							<widget class="QStackedWidget" name="stackedWidget">
+								<property name="currentIndex">
+									<number>0</number>
+								</property>
+
+								<!-- Dashboard Page -->
+								<widget class="QWidget" name="Dashboard">
+									<layout class="QVBoxLayout">
+										<property name="spacing">24</property>
+										<property name="leftMargin">32</property>
+										<property name="topMargin">32</property>
+										<property name="rightMargin">32</property>
+										<property name="bottomMargin">32</property>
+
+										<item>
+											<widget class="QLabel" name="greeting">
+												<property name="text">
+													<string>Hi, Nasir</string>
+												</property>
+											</widget>
+										</item>
+
+										<item>
+											<layout class="QHBoxLayout">
+												<item>
+													<widget class="QFrame" name="balanceCard">
+														<layout class="QVBoxLayout">
+															<item>
+																<widget class="QLabel" name="subheading_2">
+																	<property name="text">
+																		<string>Available Balance</string>
+																	</property>
+																</widget>
+															</item>
+															<item>
+																<widget class="QLabel" name="balanceAmount">
+																	<property name="text">
+																		<string>₹ ••••</string>
+																	</property>
+																</widget>
+															</item>
+															<item>
+																<layout class="QHBoxLayout">
+																	<item>
+																		<widget class="QPushButton" name="btnShowBalance">
+																			<property name="text">
+																				<string>Show Balance</string>
+																			</property>
+																		</widget>
+																	</item>
+																	<item>
+																		<widget class="QPushButton" name="btnSendMoney">
+																			<property name="text">
+																				<string>Send Money</string>
+																			</property>
+																		</widget>
+																	</item>
+																	<item>
+																		<widget class="QPushButton" name="btnAddFunds">
+																			<property name="text">
+																				<string>Add Funds</string>
+																			</property>
+																		</widget>
+																	</item>
+																</layout>
+															</item>
+														</layout>
+													</widget>
+												</item>
+												<item>
+													<widget class="QFrame" name="statsCard">
+														<layout class="QVBoxLayout">
+															<item>
+																<widget class="QLabel" name="subheading_3">
+																	<property name="text">
+																		<string>Quick Stats</string>
+																	</property>
+																</widget>
+															</item>
+															<item>
+																<layout class="QHBoxLayout">
+																	<item>
+																		<widget class="QLabel" name="label_2">
+																			<property name="text">
+																				<string>Sent</string>
+																			</property>
+																		</widget>
+																	</item>
+																	<item>
+																		<widget class="QLabel" name="lblSent">
+																			<property name="text">
+																				<string>₹66.00</string>
+																			</property>
+																			<property name="styleSheet">
+																				<string>color:#ef4444;</string>
+																			</property>
+																		</widget>
+																	</item>
+																</layout>
+															</item>
+															<item>
+																<layout class="QHBoxLayout">
+																	<item>
+																		<widget class="QLabel" name="label_3">
+																			<property name="text">
+																				<string>Received</string>
+																			</property>
+																		</widget>
+																	</item>
+																	<item>
+																		<widget class="QLabel" name="lblReceived">
+																			<property name="text">
+																				<string>₹66.00</string>
+																			</property>
+																			<property name="styleSheet">
+																				<string>color:#22c55e;</string>
+																			</property>
+																		</widget>
+																	</item>
+																</layout>
+															</item>
+															<item>
+																<layout class="QHBoxLayout">
+																	<item>
+																		<widget class="QLabel" name="label_4">
+																			<property name="text">
+																				<string>On-Ramp</string>
+																			</property>
+																		</widget>
+																	</item>
+																	<item>
+																		<widget class="QLabel" name="lblOnRamp">
+																			<property name="text">
+																				<string>₹2,200.00</string>
+																			</property>
+																			<property name="styleSheet">
+																				<string>color:#3b82f6;</string>
+																			</property>
+																		</widget>
+																	</item>
+																</layout>
+															</item>
+														</layout>
+													</widget>
+												</item>
+											</layout>
+										</item>
+
+										<item>
+											<widget class="QFrame" name="card">
+												<layout class="QVBoxLayout">
+													<item>
+														<widget class="QLabel" name="subheading">
+															<property name="text">
+																<string>Recent Transactions</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QListWidget" name="transactionsList"/>
+													</item>
+												</layout>
+											</widget>
+										</item>
+									</layout>
+								</widget>
+
+								<!-- Transfer Funds -->
+								<widget class="QWidget" name="Transfer">
+									<layout class="QVBoxLayout">
+										<property name="spacing">24</property>
+										<property name="leftMargin">32</property>
+										<property name="topMargin">32</property>
+										<property name="rightMargin">32</property>
+										<property name="bottomMargin">32</property>
+										<item>
+											<widget class="QLabel" name="label_5">
+												<property name="styleSheet">
+													<string>font-size: 28px; font-weight: 600;</string>
+												</property>
+												<property name="text">
+													<string>Transfer Funds</string>
+												</property>
+											</widget>
+										</item>
+										<item>
+											<widget class="QFrame" name="card_2">
+												<layout class="QVBoxLayout">
+													<item>
+														<widget class="QLabel" name="label_6">
+															<property name="text">
+																<string>Add Money</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QDoubleSpinBox" name="amountInput">
+															<property name="prefix">
+																<string>₹ </string>
+															</property>
+															<property name="maximum">
+																<double>500000.00</double>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QComboBox" name="paymentMethod">
+															<item>
+																<property name="text">
+																	<string>UPI / Bank Transfer</string>
+																</property>
+															</item>
+															<item>
+																<property name="text">
+																	<string>Debit Card</string>
+																</property>
+															</item>
+														</widget>
+													</item>
+													<item>
+														<widget class="QPushButton" name="btnAddFundsConfirm">
+															<property name="text">
+																<string>Add Funds Now</string>
+															</property>
+														</widget>
+													</item>
+												</layout>
+											</widget>
+										</item>
+									</layout>
+								</widget>
+
+								<!-- P2P Transfer -->
+								<widget class="QWidget" name="P2PTransfer">
+									<layout class="QVBoxLayout">
+										<property name="spacing">24</property>
+										<property name="leftMargin">32</property>
+										<property name="topMargin">32</property>
+										<property name="rightMargin">32</property>
+										<property name="bottomMargin">32</property>
+										<item>
+											<widget class="QLabel" name="label_7">
+												<property name="styleSheet">
+													<string>font-size: 28px; font-weight: 600;</string>
+												</property>
+												<property name="text">
+													<string>P2P Transfer</string>
+												</property>
+											</widget>
+										</item>
+										<item>
+											<widget class="QFrame" name="card_3">
+												<layout class="QVBoxLayout">
+													<item>
+														<widget class="QLabel" name="label_8">
+															<property name="text">
+																<string>Send Money</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QLineEdit" name="mobileNumber">
+															<property name="placeholderText">
+																<string>Enter Mobile Number</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QDoubleSpinBox" name="p2pAmount">
+															<property name="prefix">
+																<string>₹ </string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QPushButton" name="btnPay">
+															<property name="text">
+																<string>Pay Now</string>
+															</property>
+														</widget>
+													</item>
+												</layout>
+											</widget>
+										</item>
+									</layout>
+								</widget>
+
+								<!-- Bills -->
+								<widget class="QWidget" name="Bills">
+									<layout class="QVBoxLayout">
+										<property name="spacing">24</property>
+										<property name="leftMargin">32</property>
+										<property name="topMargin">32</property>
+										<property name="rightMargin">32</property>
+										<property name="bottomMargin">32</property>
+										<item>
+											<widget class="QLabel" name="label_9">
+												<property name="styleSheet">
+													<string>font-size: 28px; font-weight: 600;</string>
+												</property>
+												<property name="text">
+													<string>Manage Bills</string>
+												</property>
+											</widget>
+										</item>
+										<item>
+											<widget class="QFrame" name="card">
+												<layout class="QVBoxLayout">
+													<item>
+														<widget class="QLabel">
+															<property name="text">
+																<string>Upcoming Bills</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QListWidget" name="billsList"/>
+													</item>
+												</layout>
+											</widget>
+										</item>
+									</layout>
+								</widget>
+
+								<!-- Recharge -->
+								<widget class="QWidget" name="Recharge">
+									<layout class="QVBoxLayout">
+										<property name="spacing">24</property>
+										<property name="leftMargin">32</property>
+										<property name="topMargin">32</property>
+										<property name="rightMargin">32</property>
+										<property name="bottomMargin">32</property>
+										<item>
+											<widget class="QLabel" name="label_10">
+												<property name="styleSheet">
+													<string>font-size: 28px; font-weight: 600;</string>
+												</property>
+												<property name="text">
+													<string>Mobile Recharge</string>
+												</property>
+											</widget>
+										</item>
+										<item>
+											<widget class="QFrame" name="card">
+												<layout class="QVBoxLayout">
+													<item>
+														<widget class="QLabel">
+															<property name="text">
+																<string>Recharge Your Mobile</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QLineEdit" name="rechargeNumber">
+															<property name="placeholderText">
+																<string>Enter Mobile Number</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QDoubleSpinBox" name="rechargeAmount">
+															<property name="prefix">
+																<string>₹ </string>
+															</property>
+															<property name="maximum">
+																<double>10000.00</double>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QComboBox" name="operatorCombo">
+															<item>
+																<property name="text">
+																	<string>Airtel</string>
+																</property>
+															</item>
+															<item>
+																<property name="text">
+																	<string>Jio</string>
+																</property>
+															</item>
+															<item>
+																<property name="text">
+																	<string>Vi</string>
+																</property>
+															</item>
+															<item>
+																<property name="text">
+																	<string>BSNL</string>
+																</property>
+															</item>
+														</widget>
+													</item>
+													<item>
+														<widget class="QPushButton" name="btnRecharge">
+															<property name="text">
+																<string>Recharge Now</string>
+															</property>
+														</widget>
+													</item>
+												</layout>
+											</widget>
+										</item>
+									</layout>
+								</widget>
+
+								<!-- Rewards -->
+								<widget class="QWidget" name="Rewards">
+									<layout class="QVBoxLayout">
+										<property name="spacing">24</property>
+										<property name="leftMargin">32</property>
+										<property name="topMargin">32</property>
+										<property name="rightMargin">32</property>
+										<property name="bottomMargin">32</property>
+										<item>
+											<widget class="QLabel" name="label_11">
+												<property name="styleSheet">
+													<string>font-size: 28px; font-weight: 600;</string>
+												</property>
+												<property name="text">
+													<string>Rewards &amp; Cashback</string>
+												</property>
+											</widget>
+										</item>
+										<item>
+											<widget class="QFrame" name="card">
+												<layout class="QVBoxLayout">
+													<item>
+														<widget class="QLabel">
+															<property name="text">
+																<string>Available Rewards</string>
+															</property>
+														</widget>
+													</item>
+													<item>
+														<widget class="QListWidget" name="rewardsList"/>
+													</item>
+												</layout>
+											</widget>
+										</item>
+									</layout>
+								</widget>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+		</layout>
+	</widget>
+	<resources/>
+	<connections/>
+</ui>

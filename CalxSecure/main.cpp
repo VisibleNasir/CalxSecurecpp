@@ -2,6 +2,8 @@
 #include <QtWidgets/QApplication>
 #include "AppController.h"
 #include "LoginDialog.h"
+#include "Home.h"
+#include "DashboardPage.h"
 
 int main(int argc, char *argv[])
 {

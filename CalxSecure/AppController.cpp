@@ -6,10 +6,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include "AppController.h"
-#include "Home.h"          // ← Your new Home page
-#include "components/NavBar.h"
-#include "components/DockWidget.h"
-#include <QTimer>
+#include "Home.h"
+#include "DashboardPage.h"
 #include "LoginDialog.h"
 
 AppController::AppController(QWidget* parent)
@@ -41,82 +39,90 @@ AppController::AppController(QWidget* parent)
 }
 void AppController::showLoginDialog()
 {
-    LoginDialog* dialog = new LoginDialog(this);
+    QSettings settings("CalxSecure", "CalxSecureApp");
 
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
+
+    stackedWidget = new QStackedWidget(this);
+
+    m_homePage = new Home(this);
+    m_dashboardPage = new DashboardPage(this);
+
+    stackedWidget->addWidget(m_homePage);      // 0
+    stackedWidget->addWidget(m_dashboardPage); // 1
+}
+void AppController::closeEvent(QCloseEvent* event)
+{
+    QSettings settings("CalxSecure", "CalxSecureApp");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
+    QMainWindow::closeEvent(event);
+}
+void AppController::setupNavigation()
+{
+    QWidget* root = new QWidget(this);
+    QVBoxLayout* mainLayout = new QVBoxLayout(root);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+
+    // ===== FULL SCREEN CONTENT ONLY =====
+    mainLayout->addWidget(stackedWidget);
+
+    setCentralWidget(root);
+
+    // ===== HOME CTA → LOGIN =====
+    connect(m_homePage, &Home::loginRequested,
+        this, &AppController::showLoginDialog);
+}
+void AppController::showLoginDialog()
+{
+    this->hide();
+
+    LoginDialog* dialog = new LoginDialog(nullptr);  // no parent = independent window
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+
+    // === SAFE CONNECTIONS ===
     connect(dialog, &LoginDialog::loginRequested, this,
-        [this](const QString& email, const QString& pass, const QString& role) {
+        [this, dialog](const QString& email, const QString& pass, const QString& role) {
             if (authManager->login(email, pass, role)) {
-                // Success - WebSocket will connect automatically via signal
+                const auto& s = authManager->currentSession();
+
+                SessionData sd;
+                sd.userId = QString::number(s.userId);
+                sd.fullName = s.fullName;
+                sd.email = s.email;
+                sd.balance = s.balance;   // you'll add balance later
+
+                AppState::instance().setSession(sd);
+                m_dashboardPage->updateBalance(s.balance, s.fullName);
+
+                this->show();
+                stackedWidget->setCurrentIndex(1); // Dashboard
+
+                dialog->close();   // safer than deleteLater() here
             }
             else {
-                QMessageBox::warning(this, "Login Failed", "Invalid credentials");
+                QMessageBox::warning(dialog, "Login Failed", "Invalid credentials or database error");
             }
         });
 
-    //dialog->exec();
-}
+    connect(dialog, &LoginDialog::signupRequested, this,
+        [this, dialog](const QString& username, const QString& email,
+            const QString& pass, const QString& fullName, const QString& phone) {
 
-void AppController::switchTheme(bool dark)
-{
-    QString style = dark ? GlobalStyle::getDarkTheme() : GlobalStyle::getLightTheme();
-    qApp->setStyleSheet(style);
+                if (authManager->signup(username, email, pass, fullName, phone, "user")) {
+                    QMessageBox::information(dialog, "Success",
+                        "Account created! Please sign in with your new credentials.");
+                    dialog->switchToLoginMode();
+                }
+                // signupFailed signal is already connected in your code
+        });
 
-    QPalette palette = dark
-        ? QPalette(QColor("#0f0f12"), QColor("#1a1a1f"))
-        : QPalette(QColor("#f8f9fa"));
-    qApp->setPalette(palette);
-}
-
-void AppController::setupUI()
-{
-    // Create stacked widget for multiple pages
-    stackedWidget = new QStackedWidget(this);
-
-    // Add your new Home page (designed with .ui file)
-    m_homePage = new Home(this);           // Home class from ui_Home.h
-    stackedWidget->addWidget(m_homePage);
-
-    // TODO: Add more pages later (P2PPage, BillsPage, etc.)
-    // stackedWidget->addWidget(m_p2pPage);
-
-    stackedWidget->setCurrentIndex(0);
-}
-
-void AppController::setupNavigation()
-{
-    // Left Dock (macOS style)
-    m_dock = new DockWidget(stackedWidget, this);
-
-    // Top Navigation Bar (Floating style)
-    m_navBar = new NavBar(stackedWidget, this);
-
-    // Main container with Left Dock + Content Area
-    QWidget* mainContainer = new QWidget(this);
-    QHBoxLayout* hLayout = new QHBoxLayout(mainContainer);
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->setSpacing(0);
-
-    hLayout->addWidget(m_dock);
-    hLayout->addWidget(stackedWidget, 1);   // Content takes remaining space
-
-    // Optional: Add Top NavBar above everything
-    QVBoxLayout* mainVertical = new QVBoxLayout();
-    mainVertical->setContentsMargins(0, 0, 0, 0);
-    mainVertical->setSpacing(0);
-    mainVertical->addWidget(m_navBar);
-    mainVertical->addWidget(mainContainer);
-
-    // Set as central widget
-    QWidget* rootWidget = new QWidget(this);
-    rootWidget->setLayout(mainVertical);
-    setCentralWidget(rootWidget);
-
-    // Connect signals
-    connect(m_dock, &DockWidget::pageRequested,
-        stackedWidget, &QStackedWidget::setCurrentIndex);
-
-    connect(m_navBar, &NavBar::homeRequested, this, [this]() {
-        stackedWidget->setCurrentIndex(0);
+    // Forward AuthManager errors to dialog
+    connect(authManager, &AuthManager::signupFailed, dialog,
+        [dialog](const QString& msg) {
+            QMessageBox::warning(dialog, "Signup Failed", msg);
         });
 
     // Connect buttons from Home.ui Top Dock to navigation

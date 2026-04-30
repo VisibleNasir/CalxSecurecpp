@@ -7,6 +7,7 @@
 #include "DatabaseManager.h"
 #include <QCoreApplication>
 #include <QStandardPaths>
+#include <QMessageBox>
 
 DatabaseManager& DatabaseManager::instance()
 {
@@ -33,32 +34,29 @@ DatabaseManager::~DatabaseManager()
 bool DatabaseManager::connect()
 {
     QMutexLocker locker(&m_mutex);
-
-    if (m_db.isOpen()) {
-        return true;
-    }
+    if (m_db.isOpen()) return true;
 
     m_db = QSqlDatabase::addDatabase("QPSQL", "calxsecure_main");
-    m_db.setHostName("localhost");           // Change in production via config
+
+    // Make configurable later (QSettings + env)
+    m_db.setHostName("localhost");
     m_db.setPort(5432);
     m_db.setDatabaseName("calxsecure");
-    m_db.setUserName("calxsecure_user");     // Use a dedicated DB user (least privilege)
-    m_db.setPassword("CalxSecure2026!");     // ← In production: load from QSettings + encrypted vault / env
+    m_db.setUserName("calxsecure_user");
+    m_db.setPassword("CalxSecure2026!");
 
     if (!m_db.open()) {
-        qCritical() << "Database connection failed:" << m_db.lastError().text();
+        QString err = m_db.lastError().text();
+        qCritical() << "❌ Database connection failed:" << err;
+        QMessageBox::critical(nullptr, "Database Error",
+            "Cannot connect to PostgreSQL.\n\nError: " + err +
+            "\n\nMake sure:\n1. PostgreSQL is running\n2. Database and user exist\n3. Password is correct");
         return false;
     }
 
-    qInfo() << "✅ PostgreSQL connected successfully (CalxSecure)";
-
-    // Optional: Set application_name for monitoring
-    QSqlQuery query(m_db);
-    query.exec("SET application_name = 'CalxSecure-Desktop'");
-
+    qInfo() << "✅ PostgreSQL connected successfully";
     return true;
 }
-
 QSqlQuery DatabaseManager::executeQuery(const QString& sql, const QVariantList& params)
 {
     QMutexLocker locker(&m_mutex);

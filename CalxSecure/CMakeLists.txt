@@ -37,8 +37,6 @@ set(PROJECT_SOURCES
     DatabaseManager.cpp
     GlobalStyle.h
     GlobalStyle.cpp
-    HomePage.h
-    HomePage.cpp
     components/AnimatedButton.h
     components/AnimatedButton.cpp
     components/Card.h
@@ -56,6 +54,18 @@ set(PROJECT_SOURCES
     LoginDialog.ui
     LoginDialog.h
     LoginDialog.cpp
+    DashboardPage.ui
+    DashboardPage.h
+    DashboardPage.cpp
+
+    core/AppState.h
+    core/AppState.cpp
+    services/ApiClient.h
+    services/ApiClient.cpp
+    services/PaymentService.h
+    services/PaymentService.cpp
+
+
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

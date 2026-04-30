@@ -6,6 +6,7 @@
 #include "Home.h"
 #include "components/NavBar.h"
 #include "components/DockWidget.h"
+#include "DashboardPage.h"
 
 class AppController : public QMainWindow
 {
@@ -13,6 +14,7 @@ class AppController : public QMainWindow
 
 public:
     explicit AppController(QWidget* parent = nullptr);
+    void closeEvent(QCloseEvent* event) override;
     void switchTheme(bool dark);
     void showLoginDialog();
 
@@ -26,5 +28,6 @@ private:
     DockWidget* m_dock;
     QStackedWidget* stackedWidget;
     AuthManager* authManager;
+    DashboardPage* m_dashboardPage = nullptr;
 };
 
