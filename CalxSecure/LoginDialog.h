@@ -17,7 +17,9 @@ public:
     // Public method so AppController can call it to toggle modes
     void switchToLoginMode();
     void resetForm();
-
+    void showError(const QString& msg);
+	void showSuccess(const QString& msg);
+    void keyPressEvent(QKeyEvent* event) override;
 protected:
     // Override close event to prevent users from bypassing login
     void closeEvent(QCloseEvent *event) override;

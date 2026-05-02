@@ -38,6 +38,11 @@ set(PROJECT_SOURCES
     DatabaseManager.cpp
     GlobalStyle.h
     GlobalStyle.cpp
+    components/TransactionSuccessDialog.h
+    components/TransactionSuccessDialog.cpp
+    components/PinDialog.ui
+    components/PinDialog.h
+    components/PinDialog.cpp
     components/AnimatedButton.h
     components/AnimatedButton.cpp
     components/Card.h
@@ -65,7 +70,15 @@ set(PROJECT_SOURCES
     services/ApiClient.cpp
     services/PaymentService.h
     services/PaymentService.cpp
-     
+
+    components/LoadingOverlay.h
+    components/LoadingOverlay.cpp
+    RechargeManager.h
+     RechargeManager.cpp
+
+     AdminPage.ui
+     AdminPage.h
+     AdminPage.cpp
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

@@ -90,6 +90,7 @@
         </layout>
        </widget>
       </item>
+		 
       <item>
        <widget class="QFrame" name="card">
         <layout class="QVBoxLayout" name="cardLayout_2">

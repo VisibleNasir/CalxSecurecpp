@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+	<class>PinDialogClass</class>
+	<widget class="QWidget" name="PinDialogClass">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>480</width>
+				<height>420</height>
+			</rect>
+		</property>
+		<property name="styleSheet">
+			<string notr="true">
+				QWidget#PinDialogClass {
+				background-color: rgba(15, 15, 20, 240);
+				border-radius: 20px;
+				}
+				QFrame#card {
+				background-color: #111113;
+				border: 1px solid #3b82f6;
+				border-radius: 20px;
+				}
+				QLabel {
+				color: #e5e5e5;
+				}
+				QLabel#title {
+				font-size: 26px;
+				font-weight: 700;
+				color: #ffffff;
+				}
+				QLabel#subtitle {
+				font-size: 14px;
+				color: #a1a1aa;
+				}
+				/* OTP Boxes */
+				QLineEdit {
+				background-color: #1f1f23;
+				border: 2px solid #3b82f6;
+				border-radius: 12px;
+				font-size: 28px;
+				font-weight: bold;
+				color: white;
+				min-width: 60px;
+				min-height: 68px;
+				text-align: center;
+				}
+				QLineEdit:focus {
+				border: 2px solid #60a5fa;
+				background-color: #27272a;
+				}
+				QPushButton {
+				font-weight: 600;
+				border-radius: 12px;
+				padding: 14px 24px;
+				}
+				QPushButton#btnSubmit {
+				background-color: #22c55e;
+				color: black;
+				}
+				QPushButton#btnCancel {
+				background-color: #ef4444;
+				color: white;
+				}
+				QLabel#lblError {
+				color: #ef4444;
+				font-size: 14px;
+				}
+			</string>
+		</property>
+		<layout class="QVBoxLayout">
+			<item>
+				<widget class="QFrame" name="card">
+					<layout class="QVBoxLayout">
+						<property name="spacing">
+							<number>24</number>
+						</property>
+						<property name="leftMargin">
+							<number>32</number>
+						</property>
+						<property name="topMargin">
+							<number>32</number>
+						</property>
+						<property name="rightMargin">
+							<number>32</number>
+						</property>
+						<property name="bottomMargin">
+							<number>32</number>
+						</property>
+
+						<!-- Title -->
+						<item alignment="Qt::AlignHCenter">
+							<widget class="QLabel" name="title">
+								<property name="text">
+									<string>Enter Transaction PIN</string>
+								</property>
+							</widget>
+						</item>
+
+						<!-- Subtitle -->
+						<item alignment="Qt::AlignHCenter">
+							<widget class="QLabel" name="subtitle">
+								<property name="text">
+									<string>Secure your transaction</string>
+								</property>
+							</widget>
+						</item>
+
+						<!-- OTP Boxes -->
+						<item>
+							<layout class="QHBoxLayout" name="otpLayout">
+								<property name="spacing">
+									<number>16</number>
+								</property>
+								<item>
+									<widget class="QLineEdit" name="d1">
+										<property name="maxLength">
+											<number>1</number>
+										</property>
+										<property name="echoMode">
+											<enum>QLineEdit::Password</enum>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<widget class="QLineEdit" name="d2">
+										<property name="maxLength">
+											<number>1</number>
+										</property>
+										<property name="echoMode">
+											<enum>QLineEdit::Password</enum>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<widget class="QLineEdit" name="d3">
+										<property name="maxLength">
+											<number>1</number>
+										</property>
+										<property name="echoMode">
+											<enum>QLineEdit::Password</enum>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<widget class="QLineEdit" name="d4">
+										<property name="maxLength">
+											<number>1</number>
+										</property>
+										<property name="echoMode">
+											<enum>QLineEdit::Password</enum>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+
+						<!-- Error -->
+						<item>
+							<widget class="QLabel" name="lblError">
+								<property name="visible">
+									<bool>false</bool>
+								</property>
+							</widget>
+						</item>
+
+						<!-- Buttons -->
+						<item>
+							<layout class="QHBoxLayout">
+								<item>
+									<widget class="QPushButton" name="btnSubmit">
+										<property name="text">
+											<string>Verify</string>
+										</property>
+									</widget>
+								</item>
+								<item>
+									<widget class="QPushButton" name="btnCancel">
+										<property name="text">
+											<string>Cancel</string>
+										</property>
+									</widget>
+								</item>
+							</layout>
+						</item>
+					</layout>
+				</widget>
+			</item>
+		</layout>
+	</widget>
+	<resources/>
+	<connections/>
+</ui>

@@ -29,7 +29,7 @@
 				border-bottom: 1px solid #27272a;
 				}
 
-				QPushButton#navBtn {
+				QPushButton#navBtn_Home, QPushButton#navBtn_Dashboard, QPushButton#navBtn_Transfer, QPushButton#navBtn_P2P, QPushButton#navBtn_Analytics {
 				background: transparent;
 				border: none;
 				padding: 8px 20px;
@@ -38,7 +38,7 @@
 				color: #e5e5e5;
 				}
 
-				QPushButton#navBtn:hover {
+				QPushButton#navBtn_Home:hover, QPushButton#navBtn_Dashboard:hover, QPushButton#navBtn_Transfer:hover, QPushButton#navBtn_P2P:hover, QPushButton#navBtn_Analytics:hover {
 				color: white;
 				background-color: #1f1f22;
 				border-radius: 8px;
@@ -148,7 +148,7 @@
 						</item>
 
 						<item>
-							<widget class="QPushButton" name="navBtn">
+							<widget class="QPushButton" name="navBtn_Home">
 								<property name="text">
 									<string>Home</string>
 								</property>
@@ -158,7 +158,7 @@
 							</widget>
 						</item>
 						<item>
-							<widget class="QPushButton" name="navBtn">
+							<widget class="QPushButton" name="navBtn_Dashboard">
 								<property name="text">
 									<string>Dashboard</string>
 								</property>
@@ -168,7 +168,7 @@
 							</widget>
 						</item>
 						<item>
-							<widget class="QPushButton" name="navBtn">
+							<widget class="QPushButton" name="navBtn_Transfer">
 								<property name="text">
 									<string>Transfer</string>
 								</property>
@@ -178,7 +178,7 @@
 							</widget>
 						</item>
 						<item>
-							<widget class="QPushButton" name="navBtn">
+							<widget class="QPushButton" name="navBtn_P2P">
 								<property name="text">
 									<string>P2P</string>
 								</property>
@@ -188,7 +188,7 @@
 							</widget>
 						</item>
 						<item>
-							<widget class="QPushButton" name="navBtn">
+							<widget class="QPushButton" name="navBtn_Analytics">
 								<property name="text">
 									<string>Analytics</string>
 								</property>

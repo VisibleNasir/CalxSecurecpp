@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui version="4.0">
+	<class>AdminPageClass</class>
+	<widget class="QWidget" name="AdminPageClass">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>1200</width>
+				<height>800</height>
+			</rect>
+		</property>
+		<property name="styleSheet">
+			<string notr="true">
+				QWidget#AdminPageClass { background-color: #09090b; color: #ffffff; }
+				QListWidget { background-color: #111113; border: 1px solid #27272a; }
+				QListWidget::item { padding: 12px; margin: 4px; border-radius: 8px; }
+				QPushButton { padding: 12px 20px; font-weight: 600; }
+			</string>
+		</property>
+		<layout class="QVBoxLayout">
+			<item>
+				<widget class="QLabel" name="lblTitle">
+					<property name="text">
+						<string>Admin Panel</string>
+					</property>
+				</widget>
+			</item>
+			<item>
+				<widget class="QLabel" name="lblSubtitle">
+					<property name="text">
+						<string>Pending Onramp Transactions</string>
+					</property>
+				</widget>
+			</item>
+			<item>
+				<widget class="QListWidget" name="listPending"/>
+			</item>
+			<item>
+				<layout class="QHBoxLayout">
+					<item>
+						<widget class="QPushButton" name="btnRefresh">
+							<property name="text">
+								<string>Refresh</string>
+							</property>
+						</widget>
+					</item>
+					<item>
+						<widget class="QPushButton" name="btnApprove">
+							<property name="text">
+								<string>Approve Selected</string>
+							</property>
+						</widget>
+					</item>
+					<item>
+						<widget class="QPushButton" name="btnReject">
+							<property name="text">
+								<string>Reject Selected</string>
+							</property>
+						</widget>
+					</item>
+				</layout>
+			</item>
+		</layout>
+	</widget>
+	<resources/>
+	<connections/>
+</ui>

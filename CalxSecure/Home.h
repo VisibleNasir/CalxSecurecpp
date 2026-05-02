@@ -16,8 +16,10 @@ signals:
 private slots:
     void onPrimaryBtnClicked();
 signals:
-	void transferRequested();
-	void billsRequested();
+void transferRequested();
+void p2pRequested();
+void analyticsRequested();
+void billsRequested();
 	void rechargeRequested();
 	void rewardsRequested();
     void loginRequested();

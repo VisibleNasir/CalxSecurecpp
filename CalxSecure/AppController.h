@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include "AdminPage.h"
 #include "AuthManager.h"
-
 class Home;
 class DashboardPage;
 
@@ -25,9 +25,11 @@ private:
     void switchTheme(bool dark);
 
     QStackedWidget* stackedWidget = nullptr;
-    Home* m_homePage = nullptr;
+    Home* m_homePage = nullptr; 
+    AdminPage* m_adminPage = nullptr;
     DashboardPage* m_dashboardPage = nullptr;
     AuthManager* authManager = nullptr;
+
 };
 
 #endif // APPCONTROLLER_H

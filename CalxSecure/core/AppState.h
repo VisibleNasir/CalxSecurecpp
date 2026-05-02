@@ -7,6 +7,7 @@ struct SessionData {
     QString userId;
     QString fullName;
     QString email;
+    QString phone;
     double balance = 0.0;
 };
 
@@ -31,7 +32,8 @@ public:
     // ===== BALANCE =====
     double balance() const;
     void setBalance(double newBalance);
-
+    QString phone() const;           // ← Add this
+    void setPhone(const QString& newPhone);  // ← Add this
     // ===== SESSION =====
     bool isLoggedIn() const { return !m_userId.isEmpty(); }
     void setSession(const SessionData& data);
@@ -48,6 +50,7 @@ private:
         QString m_token;
     QString m_userId;
     QString m_fullName;
+    QString m_phone;
     QString m_email;
     double m_balance = 0.0;
 };

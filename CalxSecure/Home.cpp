@@ -1,4 +1,4 @@
-#include "Home.h"
+﻿#include "Home.h"
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
 #include <QParallelAnimationGroup>
@@ -10,6 +10,24 @@ Home::Home(QWidget* parent) : QWidget(parent)
 	// Connect button
 	connect(ui.primaryBtn, &QPushButton::clicked,
 		this, &Home::onPrimaryBtnClicked);
+    
+    // Connect nav buttons
+    connect(ui.navBtn_Home, &QPushButton::clicked, this, [this]() {
+        // Already on home, do nothing, or emit homeRequested if we needed to
+    });
+    connect(ui.navBtn_Dashboard, &QPushButton::clicked, this, [this]() {
+        emit dashboardRequested();
+    });
+    connect(ui.navBtn_Transfer, &QPushButton::clicked, this, [this]() {
+        emit transferRequested();
+    });
+    connect(ui.navBtn_P2P, &QPushButton::clicked, this, [this]() {
+        emit p2pRequested();
+    });
+    connect(ui.navBtn_Analytics, &QPushButton::clicked, this, [this]() {
+        emit analyticsRequested();
+    });
+
 	// Setup entrance animations
 	QTimer::singleShot(100, this, &Home::setupAnimations);
 }

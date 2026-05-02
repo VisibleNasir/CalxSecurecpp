@@ -1,167 +1,157 @@
 ﻿#include "LoginDialog.h"
-#include <QMessageBox>
 #include <QRegularExpression>
 #include <QDateTime>
+#include <QApplication>
+#include <QKeyEvent>
 #include <QCloseEvent>
+
 // ==================== CONSTRUCTOR ====================
 LoginDialog::LoginDialog(QWidget* parent)
-	: QWidget(parent)
+    : QWidget(parent)
 {
-	ui.setupUi(this);
-	// Make it look like a proper dialog
-	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
-	setAttribute(Qt::WA_TranslucentBackground);
-	// ==================== STYLE FIX (LESS PADDING) ====================
-	ui.lblEmailError->setStyleSheet(
-		"color:#ff4d4f;"
-		"font-size:11px;"
-		"padding:2px 0px;"
-	);
-	ui.lblPasswordError->setStyleSheet(
-		"color:#ff4d4f;"
-		"font-size:11px;"
-		"padding:2px 0px;"
-	);
-	// ==================== LIVE VALIDATION RESET ====================
-	connect(ui.leEmail, &QLineEdit::textChanged, this, [this] {
-		ui.lblEmailError->setVisible(false);
-		ui.leEmail->setStyleSheet("");
-		});
-	connect(ui.lePassword, &QLineEdit::textChanged, this, [this] {
-		ui.lblPasswordError->setVisible(false);
-		ui.lePassword->setStyleSheet("");
-		});
-	// ==================== SIGNALS ====================
-	connect(ui.btnSubmit, &QPushButton::clicked, this, &LoginDialog::onSubmitClicked);
-	connect(ui.lblToggle, &QLabel::linkActivated, this, &LoginDialog::onToggleClicked);
-	// Toggle label setup
-	ui.lblToggle->setTextFormat(Qt::RichText);
-	ui.lblToggle->setOpenExternalLinks(false);
-	updateUIForMode();
+    ui.setupUi(this);
+
+    setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground);
+
+    ui.lblEmailError->setStyleSheet("color:#ff4d4f; font-size:11px;");
+    ui.lblPasswordError->setStyleSheet("color:#ff4d4f; font-size:11px;");
+
+
+    // Live validation reset
+    connect(ui.leEmail, &QLineEdit::textChanged, this, [this] {
+        ui.lblEmailError->setVisible(false);
+        });
+
+    connect(ui.lePassword, &QLineEdit::textChanged, this, [this] {
+        ui.lblPasswordError->setVisible(false);
+        });
+
+    // Signals
+    connect(ui.btnSubmit, &QPushButton::clicked, this, &LoginDialog::onSubmitClicked);
+    connect(ui.lblToggle, &QLabel::linkActivated, this, &LoginDialog::onToggleClicked);
+
+    updateUIForMode();
 }
+
 // ==================== DESTRUCTOR ====================
-LoginDialog::~LoginDialog() {}
-// ==================== HELPER: EMAIL VALIDATION ====================
+LoginDialog::~LoginDialog()
+{
+}
+
+// ==================== VALIDATION ====================
 bool isValidEmail(const QString& email)
 {
-	QRegularExpression regex(R"((\w+)(.\w+)*@(\w+)(.\w+)+)");
-	return regex.match(email).hasMatch();
+    QRegularExpression regex(R"((\w+)(\.\w+)*@(\w+)(\.\w+)+)");
+    return regex.match(email).hasMatch();
 }
-// ==================== RESET FORM ====================
-void LoginDialog::resetForm()
+
+// ==================== ERROR DISPLAY ====================
+void LoginDialog::showError(const QString& msg)
 {
-	ui.leEmail->clear();
-	ui.lePassword->clear();
-	ui.lblEmailError->clear();
-	ui.lblPasswordError->clear();
-	ui.lblEmailError->setVisible(false);
-	ui.lblPasswordError->setVisible(false);
-	ui.leEmail->setStyleSheet("");
-	ui.lePassword->setStyleSheet("");
+    ui.lblEmailError->setStyleSheet("color:#ff4d4f;");
+    ui.lblEmailError->setText(msg);
+    ui.lblEmailError->setVisible(true);
 }
-// ==================== UI MODE SWITCH ====================
-void LoginDialog::updateUIForMode()
+
+void LoginDialog::showSuccess(const QString& msg)
 {
-	if (m_isSignup) {
-		ui.title->setText("Create Account");
-		ui.subtitle->setText("Join CalxSecure today");
-		ui.btnSubmit->setText("Create Account");
-		ui.lblToggle->setText(
-			"<a href=\"#\" style=\"color:#888888; text-decoration:none;\">"
-			"Already have an account? Sign In"
-		);
-	}
-	else {
-		ui.title->setText("Welcome Back");
-		ui.subtitle->setText("Sign in to continue to CalxSecure");
-		ui.btnSubmit->setText("Sign In");
-		ui.lblToggle->setText(
-			"<a href=\"#\" style=\"color:#888888; text-decoration:none;\">"
-			"Don't have an account? Sign Up"
-		);
-	}
+    ui.lblEmailError->setStyleSheet("color:#00c853;");
+    ui.lblEmailError->setText(msg);
+    ui.lblEmailError->setVisible(true);
 }
-// ==================== TOGGLE LOGIN <-> SIGNUP ====================
-void LoginDialog::onToggleClicked()
-{
-	m_isSignup = !m_isSignup;
-	resetForm(); // ✅ Clear everything
-	updateUIForMode(); // ✅ Update UI text
-}
-// ==================== SUBMIT HANDLER ====================
+
+// ==================== SUBMIT ====================
 void LoginDialog::onSubmitClicked()
 {
-	QString email = ui.leEmail->text().trimmed();
-	QString password = ui.lePassword->text();
+    QString email = ui.leEmail->text().trimmed();
+    QString password = ui.lePassword->text();
 
-	qDebug() << "[AUTH] Submit Clicked! Mode:" << (m_isSignup ? "Signup" : "Login");
-	qDebug() << "[AUTH] Email entered:" << email;
+    bool valid = true;
 
-	bool isValid = true;
-	QString errorMessage = "";
+    ui.lblEmailError->setVisible(false);
+    ui.lblPasswordError->setVisible(false);
 
-	// Reset errors
-	ui.lblEmailError->setVisible(false);
-	ui.lblPasswordError->setVisible(false);
-	ui.leEmail->setStyleSheet("");
-	ui.lePassword->setStyleSheet("");
-	// ==================== EMAIL VALIDATION ====================
-	if (email.isEmpty()) {
-		errorMessage += "- Email is required.\n";
-		ui.leEmail->setStyleSheet("border:1px solid #ff4d4f;");
-		isValid = false;
-	}
-	else if (!isValidEmail(email)) {
-		errorMessage += "- Enter a valid email format (e.g., name@domain.com).\n";
-		ui.leEmail->setStyleSheet("border:1px solid #ff4d4f;");
-		isValid = false;
-	}
-	// ==================== PASSWORD VALIDATION ====================
-	if (password.isEmpty()) {
-		errorMessage += "- Password is required.\n";
-		ui.lePassword->setStyleSheet("border:1px solid #ff4d4f;");
-		isValid = false;
-	}
-	else if (password.length() < 8) {
-		errorMessage += "- Password must be exactly 8 characters or more.\n";
-		ui.lePassword->setStyleSheet("border:1px solid #ff4d4f;");
-		isValid = false;
-	}
-	// If validation fails, SHOW A POPUP so it doesn't fail silently
-	if (!isValid) {
-		qWarning() << "[AUTH] Validation Failed:" << errorMessage;
-		QMessageBox::warning(this, "Validation Error", errorMessage);
-		return; 
-	}
-	// ==================== PROCEED TO ROUTER ====================
-	if (m_isSignup) {
-		qDebug() << "[AUTH] Emitting signupRequested...";
-		QString baseName = email.section('@', 0, 0);
-		QString uniqueSuffix = QString::number(QDateTime::currentMSecsSinceEpoch() % 10000);
-		QString username = baseName + uniqueSuffix;
-		
-		emit signupRequested(username, email, password, "New User", "+91 0000000000");
-	}
-	else {
-		// Ensure role exists and is lowercase before passing
-		QString role = "user"; // Fallback default
-		if (ui.cbRole) {
-			role = ui.cbRole->currentText().toLower();
-		}
-		
-		qDebug() << "[AUTH] Emitting loginRequested with Role:" << role;
-		emit loginRequested(email, password, role);
-	}
+    if (email.isEmpty() || !isValidEmail(email)) {
+        ui.lblEmailError->setText("Enter valid email");
+        ui.lblEmailError->setVisible(true);
+        valid = false;
+    }
+
+    if (password.length() < 8) {
+        ui.lblPasswordError->setText("Min 8 characters required");
+        ui.lblPasswordError->setVisible(true);
+        valid = false;
+    }
+
+    if (!valid) return;
+
+    // Temporarily disable the button
+    ui.btnSubmit->setEnabled(false);
+
+    if (m_isSignup) {
+        ui.btnSubmit->setText("Signing up...");
+        QCoreApplication::processEvents(); // Force UI update
+
+        QString username = email.section('@', 0, 0);
+        emit signupRequested(username, email, password, "User", "");
+    }
+    else {
+        ui.btnSubmit->setText("Logging in...");
+        QCoreApplication::processEvents(); // Force UI update
+
+        emit loginRequested(email, password, "user");
+    }
 }
-// ==================== PREVENT WINDOW CLOSE ====================
-void LoginDialog::closeEvent(QCloseEvent* event)	
+
+// Ensure resetting logic is properly placed so we can call it when failure occurs
+void LoginDialog::resetForm()
 {
-	event->ignore();
+    ui.btnSubmit->setEnabled(true);
+    updateUIForMode();
 }
-// ==================== FORCE LOGIN MODE ====================
+
+// ==================== TOGGLE ====================
+void LoginDialog::onToggleClicked()
+{
+    m_isSignup = !m_isSignup;
+    updateUIForMode();
+}
+
+// ==================== MODE UI ====================
+void LoginDialog::updateUIForMode()
+{
+    if (m_isSignup) {
+        ui.title->setText("Create Account");
+        ui.subtitle->setText("Sign up to create your secure account");
+        ui.btnSubmit->setText("Sign Up");
+        ui.lblToggle->setText("Already have an account? <a href=\"#\" style=\"color:#ffffff;\">Sign In</a>");
+    }
+    else {
+        ui.title->setText("Welcome Back");
+        ui.subtitle->setText("Sign in to access your secure account");
+        ui.btnSubmit->setText("Sign In");
+        ui.lblToggle->setText("Don't have an account? <a href=\"#\" style=\"color:#ffffff;\">Sign Up</a>");
+    }
+}
+
+// ==================== REQUIRED (FIXES LINKER ERROR) ====================
 void LoginDialog::switchToLoginMode()
 {
-	m_isSignup = false;
-	resetForm(); // ✅ Clear everything
-	updateUIForMode();
+    m_isSignup = false;
+    updateUIForMode();
+}
+
+// ==================== OPTIONAL CLOSE HANDLING ====================
+void LoginDialog::closeEvent(QCloseEvent* event)
+{
+    // Allow closing (important fix)
+    event->accept();
+}
+
+// ==================== ESC CLOSE ====================
+void LoginDialog::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Escape)
+        qApp->quit();
 }

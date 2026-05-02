@@ -49,13 +49,22 @@ void AppState::setBalance(double newBalance) {
         emit balanceChanged();
     }
 }
+QString AppState::phone() const {
+    return m_phone;
+}
 
+void AppState::setPhone(const QString& newPhone) {
+    if (m_phone != newPhone) {
+        m_phone = newPhone;
+        emit authChanged();
+    }
+}
 // ================= SESSION =================
 void AppState::setSession(const SessionData& data) {
     m_userId = data.userId;
     m_fullName = data.fullName;
     m_email = data.email;
-
+    m_phone = data.phone;
     setBalance(data.balance); // ensures signal emission
 
     emit authChanged();
